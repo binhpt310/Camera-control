@@ -21,7 +21,7 @@ namespace WindowsFormsApp1
 
     public partial class Form1 : Form
     {
-        string serialDataIn;
+        string serialDataIn ="";
         public Form1()
         {
             InitializeComponent();
@@ -37,29 +37,6 @@ namespace WindowsFormsApp1
             senddata_btn.Enabled = false;
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void errortxt_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void clear_btn_Click(object sender, EventArgs e)
         {
@@ -68,241 +45,97 @@ namespace WindowsFormsApp1
             errortxt.Text = "";
             pictureBox1.Image = null;
             pictureBox2.Image = null;
+            serialPort1.DiscardInBuffer();
         }
 
         private void getdata_btn_Click_1(object sender, EventArgs e)
         {
-            try
-            {
-                /*while (pictureBox1.Image == null && pictureBox2.Image == null)
+                try
                 {
-                        string a = _serialPort.ReadLine();
-                        a = a.Replace("\r", "");
 
-                        if (a.Length == 92)
-                        {
-                            SaveImage(a, errortxt);
-                            //Thread.Sleep(3000);
-                            pictureBox1.Image = Image.FromFile(@"C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/Image/Image.jpg");
-                            pictureBox2.Image = Image.FromFile(@"C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/Image/Image.png");
-                        }
-                }*/
-                String receivedCommand = serialPort1.ReadExisting().Replace(" ", "");
-                char[] ch = receivedCommand.ToCharArray();
-                String received = new string(ch);
-                data_receive_txt.Text += received;
-                /*if (ch[1] == 'R')
-                    data_receive_txt.Text += "Receive R command";
-                else if (ch[1] == 'F')
-                    data_receive_txt.Text += "Receive F command";*/
-            }
+                    string rawData = System.IO.File.ReadAllText(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\textfile\newfile.txt");
+                    byte[] image = HexString2Bytes(rawData);
+                    
+                    File.WriteAllBytes(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\Image\Snapshot.jpg", image);
 
-            catch (IOException err)
-            {
+                    /*if (pictureBox1.Image == null && pictureBox2.Image == null)
+                    {
+                        //pictureBox1.Image = Image.FromFile(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\Image\Snapshot.png");
+                        pictureBox2.Image = Image.FromFile(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\Image\Snapshot.jpg");
+                    }*/
+                }
+
+                catch (IOException err)
+                {
                     errortxt.Text = err.ToString();
-            }
+                }
+           
 
         }
 
-        static void SaveImage(string imageString, System.Windows.Forms.TextBox errortxt)
+        private static byte[] HexString2Bytes(string hexString)
         {
-            try
+            int bytesCount = (hexString.Length) / 2;
+            byte[] bytes = new byte[bytesCount];
+            for (int x = 0; x < bytesCount; ++x)
             {
-                //byte[] bytes = Convert.FromBase64String(imageString);
-                byte[] bytes = Encoding.UTF8.GetBytes(imageString);
-                string imagePath = "C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/Image/";
-                string imageJPG = "Image.jpg";
-                File.WriteAllBytes(imagePath + imageJPG, bytes);
-
-                string imagePNG = "Image.png";
-                File.WriteAllBytes(imagePath + imagePNG, bytes);
+                bytes[x] = Convert.ToByte(hexString.Substring(x * 2, 2), 16);
             }
+            return bytes;
+        }
 
-            catch (IOException e)
+        private static string Bytes2HexString(byte[] buffer)
+        {
+            var hex = new StringBuilder(buffer.Length * 2);
+            foreach (byte b in buffer)
             {
-                errortxt.Text = e.ToString();
+                hex.AppendFormat("{0:x2}", b);
             }
-        }
-        
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
+            return hex.ToString();
         }
 
         private void senddata_btn_Click(object sender, EventArgs e)
         {
-            
-            try {
-                String originalCommand = command_txt.Text.Replace(" ", ""); //Full command as String
-                char[] ch = originalCommand.ToCharArray(); //Command split as char array
-
-
-                String imgData = imgdata_txt.Text.Replace(" ", "");
-                String commandWithImgData = originalCommand + imgData;
-                char[] ch_f = commandWithImgData.ToCharArray();
-                int imgDataLen = imgdata_txt.Text.Replace(" ", "").Length; //Length of image data + checksum
-
-                if (ch[1] == 'I')
-                    serialPort1.Write(I_command(ch));
-                else if (ch[1] == 'H')
-                    serialPort1.Write(H_command(ch));
-                else if (ch[1] == 'E')
-                    serialPort1.Write(E_command(ch));
-                else if (ch[1] == 'D')
-                    serialPort1.Write(D_command(ch));
-                else if (ch[1] == 'Q')
-                    serialPort1.Write(Q_command(ch));
-                else
-                    errortxt.Text = "Your command is incorrect !";
-            }
-
-            catch (IOException er )
+            if (String.IsNullOrEmpty(command_txt.Text) == false)
             {
-                errortxt.Text = er.ToString();
+                try
+                {
+                    String originalCommand = command_txt.Text.Replace(" ", ""); //Full command as String
+                    char[] ch = originalCommand.ToCharArray(); //Command split as char array
+
+                    if (ch[2] == '4' && ch[3] == '9')
+                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+                    else if (ch[2] == '4' && ch[3] == '8')
+                    { //Command with H header
+                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+
+                    }
+                    else if (ch[2] == '4' && ch[3] == '5')
+                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+                    else if (ch[2] == '4' && ch[3] == '4')
+                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+                    else if (ch[2] == '5' && ch[3] == '1')
+                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+                    else
+                        errortxt.Text = "Your command is incorrect !";
+                }
+
+                catch (IOException er)
+                {
+                    errortxt.Text = er.ToString();
+                }
             }
+            else
+                errortxt.Text = ("No command provided !");
         }
 
-        static String generateHexString(String command)
+        static string generateHexString(String command)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(command); //bytes[] = [85, 73, 48, 49, 51, 35]
             var hexString = BitConverter.ToString(bytes); //hexString = "55-49-30-31-33-23"
             hexString = hexString.Replace("-", "");
             return hexString;
-        }
 
-        static String I_command(char[] ch)
-        {
-            try
-            {
-                String part1 = new string(new char[] { ch[0], ch[1] }); //UI
-                String part2 = new string(new char[] { ch[2], ch[3] }); //Cam ID
-                String part3 = new string(new char[] { ch[4], ch[5] }); //Command content and #
-                var finalHexString = generateHexString(part1) + part2 + generateHexString(part3);
-                return finalHexString;
-            }
-            
-            catch (IOException er)
-            {
-                MessageBox.Show(er.ToString());
-                return null;
-            }
-            
-        }
-
-        static String H_command(char[] ch)
-        {
-            try
-            {
-                String part1 = new string(new char[] { ch[0], ch[1] }); //UH
-                String part2 = new string(new char[] { ch[2], ch[3] }); //Cam ID
-                String part3 = new string(new char[] { ch[4] }); //Pic size (1-4)
-                String part4 = new string(new char[] { ch[5], ch[6], ch[7], ch[8] }); //The number that the snapshot will divided into
-                String part5 = new string(new char[] { ch[9] }); //#
-                var finalHexString = generateHexString(part1) + part2 + generateHexString(part3) + part4 + generateHexString(part5);
-                return finalHexString;
-            }
-            catch (IOException er)
-            {
-                MessageBox.Show(er.ToString());
-                return null;
-            }
-        }
-
-        static String R_command(char[] ch)
-        {
-            try
-            {
-                String part1 = new string(new char[] { ch[0], ch[1] }); //UR
-                String part2 = new string(new char[] { ch[2], ch[3] }); //Cam ID
-                String part3 = new string(ch[4..16]); //Command content
-                String part4 = new string(new char[] { ch[16] }); //#
-                var finalHexString = generateHexString(part1) + part2 + part3 + generateHexString(part4);
-                return finalHexString;
-            }
-
-            catch (IOException er)
-            {
-                MessageBox.Show(er.ToString());
-                return null;
-            }
-        }
-
-        static String E_command(char[] ch)
-        {
-            try
-            {
-                String part1 = new string(new char[] { ch[0], ch[1] }); //UE
-                String part2 = new string(new char[] { ch[2], ch[3] }); //Cam ID
-                String part3 = new string(ch[4..8]); //Package ID
-                String part4 = new string(new char[] { ch[8] }); //#
-                var finalHexString = generateHexString(part1) + part2 + part3 + generateHexString(part4);
-                return finalHexString;
-            }
-            catch (IOException er)
-            {
-                MessageBox.Show(er.ToString());
-                return null;
-            }
-        }
-
-        static String F_command(char[] ch, int n)
-        {
-            try
-            {
-                String part1 = new string(new char[] { ch[0], ch[1] }); //UF
-                String part2 = new string(new char[] { ch[2], ch[3] }); //Cam ID
-                String part3 = new string(ch[4..8]); //Package ID
-                String part4 = new string(ch[8..12]); //Package Size
-                String part5 = new string(ch[12..(12 + n)]); //Image data
-
-                var finalHexString = generateHexString(part1) + part2 + part3 + part4 + part5;
-                return finalHexString;
-            }
-            catch (IOException er)
-            {
-                MessageBox.Show(er.ToString());
-                return null;
-            }
-        }
-
-        static String D_command(char[] ch)
-        {
-            try
-            {
-                String part1 = new string(new char[] { ch[0], ch[1] }); //UD
-                String part2 = new string(new char[] { ch[2], ch[3] }); //Old cam ID
-                String part3 = new string(new char[] { ch[4], ch[5] }); //New cam ID
-                String part4 = new string(new char[] { ch[6] }); //#
-                var finalHexString = generateHexString(part1) + part2 + part3 + generateHexString(part4);
-                return finalHexString;
-            }
-            catch (IOException er)
-            {
-                MessageBox.Show(er.ToString());
-                return null;
-            }
-        }
-        static String Q_command(char[] ch)
-        {
-            try
-            {
-                String part1 = new string(new char[] { ch[0], ch[1] }); //UD
-                String part2 = new string(new char[] { ch[2], ch[3] }); //Cam ID
-                String part3 = new string(new char[] { ch[4], ch[5] }); //Compression rate
-                String part4 = new string(new char[] { ch[6] }); //#
-                var finalHexString = generateHexString(part1) + part2 + part3 + generateHexString(part4);
-                return finalHexString;
-            }
-            catch (IOException er)
-            {
-                MessageBox.Show(er.ToString());
-                return null;
-            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -315,7 +148,6 @@ namespace WindowsFormsApp1
             serialPort1.PortName = comboBox1.Text;
             serialPort1.BaudRate = Convert.ToInt32(baudrate_txt.Text);
             serialPort1.Open();
-
             openport_btn.Enabled = false;
             closeport_btn.Enabled = true;
             senddata_btn.Enabled = true;
@@ -323,89 +155,64 @@ namespace WindowsFormsApp1
         }
         private void closeport_btn_Click(object sender, EventArgs e)
         {
-            if (serialPort1.IsOpen) { 
+            if (serialPort1.IsOpen) {
+                serialPort1.DiscardOutBuffer();
                 serialPort1.Close();
                 openport_btn.Enabled = true;
                 closeport_btn.Enabled = false;
                 senddata_btn.Enabled = false;
+
+
+                //serialPort1.DiscardInBuffer();
             }
         }
 
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            serialDataIn = serialPort1.ReadLine();
+            serialDataIn += serialPort1.ReadByte();
             this.Invoke(new EventHandler(ShowData));
         }
 
-        private void ShowData(object sender, EventArgs e)
+        public void BlockingRead(SerialPort port, byte[] buffer, int offset, int count)
         {
-            string receivedCommand = serialDataIn.Replace(" ", "").Replace("\r","");
-            char[] ch1 = receivedCommand.ToCharArray();
-
-            //--------------------------------------- ACK from camera ------------------------------------------------
-            if (ch1[2] == '4' && ch1[3] == '8')  //ch1[1] == 'H')
+            while (count > 0)
             {
-                String ack_H = new string(ch1[0..(ch1.Length)]);
-                data_receive_txt.Text += "ACK from cam with H command: " +ack_H +"\r\n";
-            }
-
-            else if (ch1[2] == '4' && ch1[3] == '9') //(ch1[1] == 'I')
-            {
-                String ack_I = new string(ch1[0..(ch1.Length)]);
-                data_receive_txt.Text += "ACK from cam with I command: " + ack_I + "\r\n";
-            }
-
-            else if (ch1[2] == '5' && ch1[3] == '1') //(ch1[1] == 'Q')
-            {
-                String ack_Q = new string(ch1[0..(ch1.Length)]);
-                data_receive_txt.Text += "ACK from cam with Q command: " + ack_Q + "\r\n";
-            }
-
-            else if (ch1[2] == '4' && ch1[3] == '5') //(ch1[1] == 'E')
-            {
-                String ack_E = new string(ch1[0..(ch1.Length)]);
-                data_receive_txt.Text += "ACK from cam with E command: " + ack_E + "\r\n";
-            }
-
-            //-------------------------------------- Data of image ---------------------------------------------------
-
-            else if (ch1[2] == '5' && ch1[3] == '8') //(ch1[1] == 'R')
-            {
-                String img_data = new string(ch1[0..(ch1.Length)]);
-                data_receive_txt.Text += "Info of the snapshotted image data: " + img_data + "\r\n";
-            }
-
-            else if (ch1[2] == '4' && ch1[3] == '6') //(ch1[1] == 'F')
-            {
-                //Package data (no command and checksum)
-                String package_data = new string(ch1[12..(ch1.Length-4)]);
-                data_receive_txt.Text += "Data of specified package to host: " + package_data + "\r\n";
-
-                imgdata_txt.Text += package_data;
-     
+                int bytesRead = port.Read(buffer, offset, count);
+                offset += bytesRead;
+                count -= bytesRead;
             }
         }
+        private void ShowData(object sender, EventArgs e)
+        {
+
+                int length = serialPort1.BytesToRead;
+                byte[] bufferDataIn2 = new byte[length];
+                //serialPort1.Read(bufferDataIn2, 0, bufferDataIn2.Length);
+                BlockingRead(serialPort1, bufferDataIn2, 0, length);
+            //if (bufferDataIn2.Length >= 1031)
+            //{
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < bufferDataIn2.Length; i++)
+                    sb.AppendFormat("{0:X2} ", bufferDataIn2[i]);
+                data_receive_txt.Text = sb.ToString();
 
 
+            //data_receive_txt.Text = Bytes2HexString(bufferDataIn2);
+            //string imgdata = data_receive_txt.Text.Substring(0, data_receive_txt.Text.Length - 4);
 
-        /*BackgroundWorker bw = new BackgroundWorker();
+                    //using StreamWriter file = new(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\textfile\newfile.txt", append: true);
+                    //file.Write(imgdata);
+                //}
 
-// this allows our worker to report progress during work
-bw.WorkerReportsProgress = true;
+                //else
+                //{
+                    //ShowData(sender, e);
+                //}
+            
 
-// what to do in the background thread
-bw.DoWork += new DoWorkEventHandler(
-delegate (object o, DoWorkEventArgs args)
-{
-    BackgroundWorker b = o as BackgroundWorker;
-    while (true)
-    {
-        string a = serialPort1.ReadExisting();
-        a = a.Replace("\r", "");
-        if (a.Length >0)
-            data_receive_txt.Text += a+"\n";
+        } 
     }
-});
-bw.RunWorkerAsync();*/
-    }
+       
+    
 }

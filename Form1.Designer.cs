@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-           
             System.Text.DecoderReplacementFallback decoderReplacementFallback1 = new System.Text.DecoderReplacementFallback();
             System.Text.EncoderReplacementFallback encoderReplacementFallback1 = new System.Text.EncoderReplacementFallback();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -61,44 +60,42 @@
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBox1.Location = new System.Drawing.Point(13, 51);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pictureBox1.Location = new System.Drawing.Point(13, 52);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(389, 206);
+            this.pictureBox1.Size = new System.Drawing.Size(389, 207);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+
             // 
             // pictureBox2
             // 
             this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBox2.Location = new System.Drawing.Point(452, 51);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pictureBox2.Location = new System.Drawing.Point(451, 52);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(389, 206);
+            this.pictureBox2.Size = new System.Drawing.Size(389, 207);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 5;
             this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
+
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.LightGray;
-            this.label2.Location = new System.Drawing.Point(149, 11);
+            this.label2.Location = new System.Drawing.Point(149, 12);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(95, 25);
             this.label2.TabIndex = 6;
             this.label2.Text = "JPG Image";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
+
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.LightGray;
-            this.label3.Location = new System.Drawing.Point(594, 11);
+            this.label3.Location = new System.Drawing.Point(594, 12);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(102, 25);
             this.label3.TabIndex = 7;
@@ -121,11 +118,10 @@
             this.baudrate_txt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.baudrate_txt.Location = new System.Drawing.Point(1103, 53);
-            this.baudrate_txt.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.baudrate_txt.Name = "baudrate_txt";
             this.baudrate_txt.Size = new System.Drawing.Size(134, 31);
             this.baudrate_txt.TabIndex = 11;
-            this.baudrate_txt.Text = "9600";
+            this.baudrate_txt.Text = "115200";
             // 
             // label5
             // 
@@ -144,11 +140,10 @@
             this.command_txt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.command_txt.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.command_txt.Location = new System.Drawing.Point(867, 164);
-            this.command_txt.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.command_txt.Location = new System.Drawing.Point(867, 163);
             this.command_txt.Multiline = true;
             this.command_txt.Name = "command_txt";
-            this.command_txt.Size = new System.Drawing.Size(370, 93);
+            this.command_txt.Size = new System.Drawing.Size(370, 92);
             this.command_txt.TabIndex = 13;
             // 
             // label6
@@ -157,20 +152,18 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label6.Location = new System.Drawing.Point(986, 119);
+            this.label6.Location = new System.Drawing.Point(986, 118);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(131, 29);
             this.label6.TabIndex = 12;
             this.label6.Text = "Command";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // senddata_btn
             // 
             this.senddata_btn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.senddata_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.senddata_btn.Location = new System.Drawing.Point(867, 484);
-            this.senddata_btn.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.senddata_btn.Location = new System.Drawing.Point(867, 483);
             this.senddata_btn.Name = "senddata_btn";
             this.senddata_btn.Size = new System.Drawing.Size(370, 62);
             this.senddata_btn.TabIndex = 14;
@@ -184,19 +177,17 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.data_receive_txt.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.data_receive_txt.Location = new System.Drawing.Point(13, 408);
-            this.data_receive_txt.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.data_receive_txt.Multiline = true;
             this.data_receive_txt.Name = "data_receive_txt";
             this.data_receive_txt.ReadOnly = true;
             this.data_receive_txt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.data_receive_txt.Size = new System.Drawing.Size(828, 138);
+            this.data_receive_txt.Size = new System.Drawing.Size(828, 137);
             this.data_receive_txt.TabIndex = 15;
             // 
             // clear_btn
             // 
             this.clear_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.clear_btn.Location = new System.Drawing.Point(14, 281);
-            this.clear_btn.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.clear_btn.Location = new System.Drawing.Point(14, 282);
             this.clear_btn.Name = "clear_btn";
             this.clear_btn.Size = new System.Drawing.Size(144, 110);
             this.clear_btn.TabIndex = 19;
@@ -207,10 +198,9 @@
             // getdata_btn
             // 
             this.getdata_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.getdata_btn.Location = new System.Drawing.Point(166, 281);
-            this.getdata_btn.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.getdata_btn.Location = new System.Drawing.Point(166, 282);
             this.getdata_btn.Name = "getdata_btn";
-            this.getdata_btn.Size = new System.Drawing.Size(132, 110);
+            this.getdata_btn.Size = new System.Drawing.Size(131, 110);
             this.getdata_btn.TabIndex = 18;
             this.getdata_btn.Text = "Get data";
             this.getdata_btn.UseVisualStyleBackColor = true;
@@ -220,7 +210,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.label1.Location = new System.Drawing.Point(594, 281);
+            this.label1.Location = new System.Drawing.Point(594, 282);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(124, 25);
             this.label1.TabIndex = 17;
@@ -229,8 +219,7 @@
             // 
             // errortxt
             // 
-            this.errortxt.Location = new System.Drawing.Point(452, 330);
-            this.errortxt.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.errortxt.Location = new System.Drawing.Point(451, 330);
             this.errortxt.Multiline = true;
             this.errortxt.Name = "errortxt";
             this.errortxt.ReadOnly = true;
@@ -240,10 +229,9 @@
             // openport_btn
             // 
             this.openport_btn.BackColor = System.Drawing.Color.MediumSpringGreen;
-            this.openport_btn.Location = new System.Drawing.Point(304, 281);
-            this.openport_btn.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.openport_btn.Location = new System.Drawing.Point(304, 282);
             this.openport_btn.Name = "openport_btn";
-            this.openport_btn.Size = new System.Drawing.Size(98, 51);
+            this.openport_btn.Size = new System.Drawing.Size(99, 52);
             this.openport_btn.TabIndex = 20;
             this.openport_btn.Text = "Open";
             this.openport_btn.UseVisualStyleBackColor = false;
@@ -253,9 +241,8 @@
             // 
             this.closeport_btn.BackColor = System.Drawing.Color.LightCoral;
             this.closeport_btn.Location = new System.Drawing.Point(304, 340);
-            this.closeport_btn.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.closeport_btn.Name = "closeport_btn";
-            this.closeport_btn.Size = new System.Drawing.Size(98, 51);
+            this.closeport_btn.Size = new System.Drawing.Size(99, 52);
             this.closeport_btn.TabIndex = 21;
             this.closeport_btn.Text = "Close";
             this.closeport_btn.UseVisualStyleBackColor = false;
@@ -264,12 +251,11 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(867, 51);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.comboBox1.Location = new System.Drawing.Point(867, 52);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(156, 33);
+            this.comboBox1.Size = new System.Drawing.Size(155, 33);
             this.comboBox1.TabIndex = 22;
-            this.comboBox1.Text = "COM22";
+            this.comboBox1.Text = "COM16";
             // 
             // serialPort1
             // 
@@ -297,11 +283,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.imgdata_txt.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.imgdata_txt.Location = new System.Drawing.Point(867, 364);
-            this.imgdata_txt.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.imgdata_txt.Location = new System.Drawing.Point(867, 363);
             this.imgdata_txt.Multiline = true;
             this.imgdata_txt.Name = "imgdata_txt";
-            this.imgdata_txt.Size = new System.Drawing.Size(370, 93);
+            this.imgdata_txt.Size = new System.Drawing.Size(370, 92);
             this.imgdata_txt.TabIndex = 26;
             // 
             // label7
@@ -310,7 +295,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label7.Location = new System.Drawing.Point(867, 291);
+            this.label7.Location = new System.Drawing.Point(867, 292);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(355, 58);
             this.label7.TabIndex = 25;
@@ -320,7 +305,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1262, 562);
+            this.ClientSize = new System.Drawing.Size(1261, 562);
             this.Controls.Add(this.imgdata_txt);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.comboBox1);
@@ -341,7 +326,6 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form1";
             this.Text = "Image Display";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
