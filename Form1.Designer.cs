@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+ 
             System.Text.DecoderReplacementFallback decoderReplacementFallback1 = new System.Text.DecoderReplacementFallback();
             System.Text.EncoderReplacementFallback encoderReplacementFallback1 = new System.Text.EncoderReplacementFallback();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -50,8 +51,9 @@
             this.closeport_btn = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.imgdata_txt = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.get_package_txt = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.get_package_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -66,7 +68,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-
             // 
             // pictureBox2
             // 
@@ -78,7 +79,6 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 5;
             this.pictureBox2.TabStop = false;
-
             // 
             // label2
             // 
@@ -89,7 +89,6 @@
             this.label2.Size = new System.Drawing.Size(95, 25);
             this.label2.TabIndex = 6;
             this.label2.Text = "JPG Image";
-
             // 
             // label3
             // 
@@ -143,8 +142,9 @@
             this.command_txt.Location = new System.Drawing.Point(867, 163);
             this.command_txt.Multiline = true;
             this.command_txt.Name = "command_txt";
-            this.command_txt.Size = new System.Drawing.Size(370, 92);
+            this.command_txt.Size = new System.Drawing.Size(370, 39);
             this.command_txt.TabIndex = 13;
+            this.command_txt.Text = "55 48 01 32 00 04 23";
             // 
             // label6
             // 
@@ -152,18 +152,18 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label6.Location = new System.Drawing.Point(986, 118);
+            this.label6.Location = new System.Drawing.Point(936, 117);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(131, 29);
+            this.label6.Size = new System.Drawing.Size(243, 29);
             this.label6.TabIndex = 12;
-            this.label6.Text = "Command";
+            this.label6.Text = "Command snapshot";
             // 
             // senddata_btn
             // 
             this.senddata_btn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.senddata_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.senddata_btn.Location = new System.Drawing.Point(867, 483);
+            this.senddata_btn.Location = new System.Drawing.Point(867, 219);
             this.senddata_btn.Name = "senddata_btn";
             this.senddata_btn.Size = new System.Drawing.Size(370, 62);
             this.senddata_btn.TabIndex = 14;
@@ -277,37 +277,51 @@
             this.serialPort1.WriteTimeout = -1;
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
-            // imgdata_txt
+            // get_package_txt
             // 
-            this.imgdata_txt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.get_package_txt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.imgdata_txt.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.imgdata_txt.Location = new System.Drawing.Point(867, 363);
-            this.imgdata_txt.Multiline = true;
-            this.imgdata_txt.Name = "imgdata_txt";
-            this.imgdata_txt.Size = new System.Drawing.Size(370, 92);
-            this.imgdata_txt.TabIndex = 26;
+            this.get_package_txt.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.get_package_txt.Location = new System.Drawing.Point(867, 416);
+            this.get_package_txt.Multiline = true;
+            this.get_package_txt.Name = "get_package_txt";
+            this.get_package_txt.Size = new System.Drawing.Size(370, 39);
+            this.get_package_txt.TabIndex = 28;
+            this.get_package_txt.Text = "55 45 01 00 00 23";
             // 
-            // label7
+            // label8
             // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label7.Location = new System.Drawing.Point(867, 292);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(355, 58);
-            this.label7.TabIndex = 25;
-            this.label7.Text = "Image data without checksum\r\n(UF command only)";
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label8.Location = new System.Drawing.Point(954, 374);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(220, 29);
+            this.label8.TabIndex = 27;
+            this.label8.Text = "Get package Data";
+            // 
+            // get_package_btn
+            // 
+            this.get_package_btn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.get_package_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.get_package_btn.Location = new System.Drawing.Point(867, 474);
+            this.get_package_btn.Name = "get_package_btn";
+            this.get_package_btn.Size = new System.Drawing.Size(370, 62);
+            this.get_package_btn.TabIndex = 29;
+            this.get_package_btn.Text = "Get package data";
+            this.get_package_btn.UseVisualStyleBackColor = true;
+            this.get_package_btn.Click += new System.EventHandler(this.get_package_btn_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1261, 562);
-            this.Controls.Add(this.imgdata_txt);
-            this.Controls.Add(this.label7);
+            this.Controls.Add(this.get_package_btn);
+            this.Controls.Add(this.get_package_txt);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.closeport_btn);
             this.Controls.Add(this.openport_btn);
@@ -358,8 +372,9 @@
         private System.Windows.Forms.Button closeport_btn;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.IO.Ports.SerialPort serialPort1;
-        private System.Windows.Forms.TextBox imgdata_txt;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox get_package_txt;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button get_package_btn;
     }
 }
 
