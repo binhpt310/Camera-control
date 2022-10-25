@@ -189,27 +189,24 @@ namespace WindowsFormsApp1
                 byte[] bufferDataIn2 = new byte[length];
                 //serialPort1.Read(bufferDataIn2, 0, bufferDataIn2.Length);
                 BlockingRead(serialPort1, bufferDataIn2, 0, length);
-            //if (bufferDataIn2.Length >= 1031)
-            //{
+
 
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < bufferDataIn2.Length; i++)
                     sb.AppendFormat("{0:X2} ", bufferDataIn2[i]);
-                data_receive_txt.Text = sb.ToString();
+                //data_receive_txt.Text = sb.ToString();
 
 
             //data_receive_txt.Text = Bytes2HexString(bufferDataIn2);
             //string imgdata = data_receive_txt.Text.Substring(0, data_receive_txt.Text.Length - 4);
 
-                    //using StreamWriter file = new(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\textfile\newfile.txt", append: true);
-                    //file.Write(imgdata);
-                //}
+                    using StreamWriter file = new(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\textfile\newfile.jpeg", append: true);
+                    file.Write(sb);
 
-                //else
-                //{
-                    //ShowData(sender, e);
-                //}
-            
+                using StreamWriter file1 = new(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\textfile\newfile1.jpeg", append: true);
+                file1.Write(bufferDataIn2);
+            //}
+
 
         } 
     }
