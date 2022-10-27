@@ -29,13 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
- 
             System.Text.DecoderReplacementFallback decoderReplacementFallback1 = new System.Text.DecoderReplacementFallback();
             System.Text.EncoderReplacementFallback encoderReplacementFallback1 = new System.Text.EncoderReplacementFallback();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.baudrate_txt = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -54,8 +51,9 @@
             this.get_package_txt = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.get_package_btn = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.saved_file_name_txt = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -69,17 +67,6 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBox2.Location = new System.Drawing.Point(451, 52);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(389, 207);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 5;
-            this.pictureBox2.TabStop = false;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -89,16 +76,6 @@
             this.label2.Size = new System.Drawing.Size(95, 25);
             this.label2.TabIndex = 6;
             this.label2.Text = "JPG Image";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.LightGray;
-            this.label3.Location = new System.Drawing.Point(594, 12);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(102, 25);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "PNG Image";
             // 
             // label4
             // 
@@ -287,7 +264,7 @@
             this.get_package_txt.Name = "get_package_txt";
             this.get_package_txt.Size = new System.Drawing.Size(370, 39);
             this.get_package_txt.TabIndex = 28;
-            this.get_package_txt.Text = "55 45 01 00 00 23";
+            this.get_package_txt.Text = "00";
             // 
             // label8
             // 
@@ -295,11 +272,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label8.Location = new System.Drawing.Point(954, 374);
+            this.label8.Location = new System.Drawing.Point(977, 372);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(220, 29);
+            this.label8.Size = new System.Drawing.Size(146, 29);
             this.label8.TabIndex = 27;
-            this.label8.Text = "Get package Data";
+            this.label8.Text = "Package ID";
             // 
             // get_package_btn
             // 
@@ -314,11 +291,32 @@
             this.get_package_btn.UseVisualStyleBackColor = true;
             this.get_package_btn.Click += new System.EventHandler(this.get_package_btn_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.LightGray;
+            this.label3.Location = new System.Drawing.Point(594, 12);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(87, 25);
+            this.label3.TabIndex = 30;
+            this.label3.Text = "File name";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // saved_file_name_txt
+            // 
+            this.saved_file_name_txt.Location = new System.Drawing.Point(451, 54);
+            this.saved_file_name_txt.Name = "saved_file_name_txt";
+            this.saved_file_name_txt.Size = new System.Drawing.Size(390, 31);
+            this.saved_file_name_txt.TabIndex = 31;
+            this.saved_file_name_txt.Text = "new_file1.jpg";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1261, 562);
+            this.Controls.Add(this.saved_file_name_txt);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.get_package_btn);
             this.Controls.Add(this.get_package_txt);
             this.Controls.Add(this.label8);
@@ -336,16 +334,13 @@
             this.Controls.Add(this.baudrate_txt);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
             this.Text = "Image Display";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -354,9 +349,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox baudrate_txt;
         private System.Windows.Forms.Label label5;
@@ -375,6 +368,8 @@
         private System.Windows.Forms.TextBox get_package_txt;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button get_package_btn;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox saved_file_name_txt;
     }
 }
 

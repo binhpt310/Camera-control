@@ -1,27 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO.Ports;
 using System.IO;
-using System.Linq;
+using System.IO.Ports;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Threading;
-using static System.Net.Mime.MediaTypeNames;
-using Image = System.Drawing.Image;
-using System.Diagnostics;
-using System.Web.Services.Description;
+using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
 
     public partial class Form1 : Form
     {
-        int serialDataIn;
+
+        static String filename = "";
+        String path = "C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/textfile/";
+
         public Form1()
         {
             InitializeComponent();
@@ -43,8 +35,8 @@ namespace WindowsFormsApp1
             data_receive_txt.Clear();
             errortxt.Text = "";
             pictureBox1.Image = null;
-            pictureBox2.Image = null;
             serialPort1.DiscardInBuffer();
+            serialPort1.DiscardOutBuffer();
         }
 
         private void getdata_btn_Click_1(object sender, EventArgs e)
@@ -83,16 +75,6 @@ namespace WindowsFormsApp1
             return bytes;
         }
 
-        private static string Bytes2HexString(byte[] buffer)
-        {
-            var hex = new StringBuilder(buffer.Length * 2);
-            foreach (byte b in buffer)
-            {
-                hex.AppendFormat("{0:x2}", b);
-            }
-            return hex.ToString();
-        }
-
         private void senddata_btn_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(command_txt.Text) == false)
@@ -128,15 +110,6 @@ namespace WindowsFormsApp1
                 errortxt.Text = ("No command provided !");
         }
 
-        static string generateHexString(String command)
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(command); //bytes[] = [85, 73, 48, 49, 51, 35]
-            var hexString = BitConverter.ToString(bytes); //hexString = "55-49-30-31-33-23"
-            hexString = hexString.Replace("-", "");
-            return hexString;
-
-        }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (serialPort1.IsOpen) serialPort1.Close();
@@ -150,20 +123,19 @@ namespace WindowsFormsApp1
             openport_btn.Enabled = false;
             closeport_btn.Enabled = true;
             senddata_btn.Enabled = true;
-
+            filename = saved_file_name_txt.Text;
+            path += filename;
         }
         private void closeport_btn_Click(object sender, EventArgs e)
         {
             if (serialPort1.IsOpen)
             {
                 serialPort1.DiscardOutBuffer();
+                serialPort1.DiscardInBuffer();
                 serialPort1.Close();
                 openport_btn.Enabled = true;
                 closeport_btn.Enabled = false;
                 senddata_btn.Enabled = false;
-
-
-                //serialPort1.DiscardInBuffer();
             }
         }
 
@@ -172,45 +144,54 @@ namespace WindowsFormsApp1
             //serialDataIn += serialPort1.ReadByte();
             serialPort1.DataReceived += new SerialDataReceivedEventHandler(serialPort1_DataReceived);
             this.Invoke(new EventHandler(ShowData));
-            Thread.Sleep(200);
+            
+            //Thread.Sleep(200);
         }
 
-        public void BlockingRead(SerialPort port, byte[] buffer, int offset, int count)
-        {
-            while (count > 0)
-            {
-                int bytesRead = port.Read(buffer, offset, count);
-                offset += bytesRead;
-                count -= bytesRead;
-            }
-        }
         private void ShowData(object sender, EventArgs e)
         {
-            String path = @"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\textfile\newfile_trim.jpeg";
+            //Thread thread = new Thread(() => WriteToFile
+            //Thread thread = new Thread(WriteToFile);
+            //thread.Start();
+            //thread.Join();
+            //GC.Collect();
+            //GC.WaitForPendingFinalizers();
             int length = serialPort1.BytesToRead;
+            byte[] bufferDataIn2 = new byte[length];
 
-                byte[] bufferDataIn2 = new byte[length];
-                BlockingRead(serialPort1, bufferDataIn2, 0, length);
-            
-            if (length == 748)
+            if (length == 1032)
             {
-                for (int i = 6; i < bufferDataIn2.Length - 2; i++)
-                    AppendAllBytes(path, bufferDataIn2[i]);
+                serialPort1.Read(bufferDataIn2, 0, length);
+                int checksum = 0;
+                checksum = crc16Calc(bufferDataIn2, length - 2);
+                byte[] bufferDataChecksum = bufferDataIn2[^2..];
+
+                //if (BitConverter.IsLittleEndian)
+                //Array.Reverse(bufferDataChecksum);
+                int value = BitConverter.ToUInt16(bufferDataChecksum, 0);
+
+                //if (checksum == value)
+                {
+                    for (int i = 6; i < bufferDataIn2.Length - 2; i++)
+                    {
+                        using (var stream = new FileStream(path, FileMode.Append))
+                        {
+                            stream.WriteByte(bufferDataIn2[i]);
+                            stream.Flush();
+                            stream.Close();
+                            //stream.Dispose();
+                        }
+                        
+                    }
+                    Thread.Sleep(20);
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                }
             }
+
+            
         }
-
-        /*StringBuilder sb = new StringBuilder();
-
-        for (int i = 5; i < bufferDataIn2.Length-2; i++)
-            //sb.AppendFormat("{0:X2} ", bufferDataIn2[i]);
-            sb.Append(bufferDataIn2[i]);*/
-        //using StreamWriter file = new(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\textfile\newfile_trim.jpeg", append: true);
-        //file.Write(sb);
-
-
-        //for (int i = 5; i < bufferDataIn2.Length; i++)
-        //AppendAllBytes(path, bufferDataIn2[i]);
-
 
         private void get_package_btn_Click(object sender, EventArgs e)
         {
@@ -218,7 +199,9 @@ namespace WindowsFormsApp1
             {
                 try
                 {
-                    String originalCommand = get_package_txt.Text.Replace(" ", ""); //Full command as String
+                    String cam_package = get_package_txt.Text.Replace(" ", "");
+                    String originalCommand = "554501" + cam_package + "0023"; //Full command as String
+
                     char[] ch = originalCommand.ToCharArray(); //Command split as char array
 
                     if (ch[2] == '4' && ch[3] == '9')
@@ -252,6 +235,8 @@ namespace WindowsFormsApp1
             using (var stream = new FileStream(path, FileMode.Append))
             {
                 stream.WriteByte(bytes);
+                stream.Flush();
+                //stream.Close();
             }
         }
 
@@ -276,9 +261,48 @@ namespace WindowsFormsApp1
 
             return init_crc;
         }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
-    
+
+    /*
+    BackgroundWorker bw = new BackgroundWorker();
+            bw.WorkerReportsProgress = true;
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
+            {
+                BackgroundWorker b = o as BackgroundWorker;
+                int length = serialPort1.BytesToRead;
+                bool correct = false;
+                byte[] bufferDataIn2 = new byte[length];
+
+                if (length == 1032)
+                    correct = true;
+
+                if (correct)
+                {
+                    //BlockingRead(serialPort1, bufferDataIn2, 0, length);
+                    serialPort1.Read(bufferDataIn2, 0, length);
+                    int checksum = 0;
+                    checksum = crc16Calc(bufferDataIn2, length - 2);
+
+
+                    for (int i = 6; i < bufferDataIn2.Length - 2; i++)
+                    {
+                        using (var stream = new FileStream(path, FileMode.Append))
+                        {
+                            stream.WriteByte(bufferDataIn2[i]);
+                            stream.Flush();
+                            stream.Close();
+                        }
+                    }
+                }
+            });
+            bw.RunWorkerAsync();
+     */
 }
-    
-       
+
+
