@@ -39,7 +39,6 @@
             this.command_txt = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.senddata_btn = new System.Windows.Forms.Button();
-            this.data_receive_txt = new System.Windows.Forms.TextBox();
             this.clear_btn = new System.Windows.Forms.Button();
             this.getdata_btn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -62,7 +61,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.pictureBox1.Location = new System.Drawing.Point(13, 52);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(389, 207);
+            this.pictureBox1.Size = new System.Drawing.Size(389, 223);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -83,7 +82,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(867, 7);
+            this.label4.Location = new System.Drawing.Point(456, 130);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(156, 29);
             this.label4.TabIndex = 8;
@@ -91,11 +90,10 @@
             // 
             // baudrate_txt
             // 
-            this.baudrate_txt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.baudrate_txt.Location = new System.Drawing.Point(1103, 53);
+            this.baudrate_txt.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.baudrate_txt.Location = new System.Drawing.Point(692, 176);
             this.baudrate_txt.Name = "baudrate_txt";
-            this.baudrate_txt.Size = new System.Drawing.Size(134, 31);
+            this.baudrate_txt.Size = new System.Drawing.Size(123, 31);
             this.baudrate_txt.TabIndex = 11;
             this.baudrate_txt.Text = "115200";
             // 
@@ -105,7 +103,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label5.Location = new System.Drawing.Point(1103, 7);
+            this.label5.Location = new System.Drawing.Point(692, 130);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(125, 29);
             this.label5.TabIndex = 10;
@@ -113,13 +111,12 @@
             // 
             // command_txt
             // 
-            this.command_txt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.command_txt.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.command_txt.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.command_txt.Location = new System.Drawing.Point(867, 163);
+            this.command_txt.Location = new System.Drawing.Point(451, 278);
             this.command_txt.Multiline = true;
             this.command_txt.Name = "command_txt";
-            this.command_txt.Size = new System.Drawing.Size(370, 39);
+            this.command_txt.Size = new System.Drawing.Size(390, 39);
             this.command_txt.TabIndex = 13;
             this.command_txt.Text = "55 48 01 32 00 04 23";
             // 
@@ -128,38 +125,24 @@
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label6.Location = new System.Drawing.Point(936, 117);
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label6.Location = new System.Drawing.Point(555, 236);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(243, 29);
+            this.label6.Size = new System.Drawing.Size(185, 22);
             this.label6.TabIndex = 12;
             this.label6.Text = "Command snapshot";
             // 
             // senddata_btn
             // 
-            this.senddata_btn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.senddata_btn.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.senddata_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.senddata_btn.Location = new System.Drawing.Point(867, 219);
+            this.senddata_btn.Location = new System.Drawing.Point(451, 340);
             this.senddata_btn.Name = "senddata_btn";
-            this.senddata_btn.Size = new System.Drawing.Size(370, 62);
+            this.senddata_btn.Size = new System.Drawing.Size(390, 62);
             this.senddata_btn.TabIndex = 14;
             this.senddata_btn.Text = "Send data";
             this.senddata_btn.UseVisualStyleBackColor = true;
             this.senddata_btn.Click += new System.EventHandler(this.senddata_btn_Click);
-            // 
-            // data_receive_txt
-            // 
-            this.data_receive_txt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.data_receive_txt.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.data_receive_txt.Location = new System.Drawing.Point(13, 408);
-            this.data_receive_txt.Multiline = true;
-            this.data_receive_txt.Name = "data_receive_txt";
-            this.data_receive_txt.ReadOnly = true;
-            this.data_receive_txt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.data_receive_txt.Size = new System.Drawing.Size(828, 137);
-            this.data_receive_txt.TabIndex = 15;
             // 
             // clear_btn
             // 
@@ -187,7 +170,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.label1.Location = new System.Drawing.Point(594, 282);
+            this.label1.Location = new System.Drawing.Point(158, 415);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(124, 25);
             this.label1.TabIndex = 17;
@@ -196,11 +179,11 @@
             // 
             // errortxt
             // 
-            this.errortxt.Location = new System.Drawing.Point(451, 330);
+            this.errortxt.Location = new System.Drawing.Point(15, 463);
             this.errortxt.Multiline = true;
             this.errortxt.Name = "errortxt";
             this.errortxt.ReadOnly = true;
-            this.errortxt.Size = new System.Drawing.Size(388, 62);
+            this.errortxt.Size = new System.Drawing.Size(388, 138);
             this.errortxt.TabIndex = 16;
             // 
             // openport_btn
@@ -228,7 +211,7 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(867, 52);
+            this.comboBox1.Location = new System.Drawing.Point(456, 175);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(155, 33);
             this.comboBox1.TabIndex = 22;
@@ -256,36 +239,33 @@
             // 
             // get_package_txt
             // 
-            this.get_package_txt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.get_package_txt.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.get_package_txt.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.get_package_txt.Location = new System.Drawing.Point(867, 416);
+            this.get_package_txt.Location = new System.Drawing.Point(451, 484);
             this.get_package_txt.Multiline = true;
             this.get_package_txt.Name = "get_package_txt";
-            this.get_package_txt.Size = new System.Drawing.Size(370, 39);
+            this.get_package_txt.Size = new System.Drawing.Size(390, 39);
             this.get_package_txt.TabIndex = 28;
-            this.get_package_txt.Text = "00";
             // 
             // label8
             // 
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label8.Location = new System.Drawing.Point(977, 372);
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label8.Location = new System.Drawing.Point(555, 446);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(146, 29);
+            this.label8.Size = new System.Drawing.Size(168, 22);
             this.label8.TabIndex = 27;
-            this.label8.Text = "Package ID";
+            this.label8.Text = "Package amounts";
             // 
             // get_package_btn
             // 
-            this.get_package_btn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.get_package_btn.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.get_package_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.get_package_btn.Location = new System.Drawing.Point(867, 474);
+            this.get_package_btn.Location = new System.Drawing.Point(451, 539);
             this.get_package_btn.Name = "get_package_btn";
-            this.get_package_btn.Size = new System.Drawing.Size(370, 62);
+            this.get_package_btn.Size = new System.Drawing.Size(390, 62);
             this.get_package_btn.TabIndex = 29;
             this.get_package_btn.Text = "Get package data";
             this.get_package_btn.UseVisualStyleBackColor = true;
@@ -300,21 +280,20 @@
             this.label3.Size = new System.Drawing.Size(87, 25);
             this.label3.TabIndex = 30;
             this.label3.Text = "File name";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // saved_file_name_txt
             // 
-            this.saved_file_name_txt.Location = new System.Drawing.Point(451, 54);
+            this.saved_file_name_txt.Location = new System.Drawing.Point(451, 53);
             this.saved_file_name_txt.Name = "saved_file_name_txt";
             this.saved_file_name_txt.Size = new System.Drawing.Size(390, 31);
             this.saved_file_name_txt.TabIndex = 31;
-            this.saved_file_name_txt.Text = "new_file1.jpg";
+            this.saved_file_name_txt.Text = "new_file.jpg";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1261, 562);
+            this.ClientSize = new System.Drawing.Size(880, 613);
             this.Controls.Add(this.saved_file_name_txt);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.get_package_btn);
@@ -327,7 +306,6 @@
             this.Controls.Add(this.getdata_btn);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.errortxt);
-            this.Controls.Add(this.data_receive_txt);
             this.Controls.Add(this.senddata_btn);
             this.Controls.Add(this.command_txt);
             this.Controls.Add(this.label6);
@@ -356,7 +334,6 @@
         private System.Windows.Forms.TextBox command_txt;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button senddata_btn;
-        private System.Windows.Forms.TextBox data_receive_txt;
         private System.Windows.Forms.Button clear_btn;
         private System.Windows.Forms.Button getdata_btn;
         private System.Windows.Forms.Label label1;

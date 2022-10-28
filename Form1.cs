@@ -27,12 +27,12 @@ namespace WindowsFormsApp1
             openport_btn.Enabled = true;
             closeport_btn.Enabled = false;
             senddata_btn.Enabled = false;
+            get_package_btn.Enabled = false;
         }
 
 
         private void clear_btn_Click(object sender, EventArgs e)
         {
-            data_receive_txt.Clear();
             errortxt.Text = "";
             pictureBox1.Image = null;
             serialPort1.DiscardInBuffer();
@@ -112,7 +112,7 @@ namespace WindowsFormsApp1
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (serialPort1.IsOpen) serialPort1.Close();
+           
         }
 
         private void openport_btn_Click(object sender, EventArgs e)
@@ -123,6 +123,7 @@ namespace WindowsFormsApp1
             openport_btn.Enabled = false;
             closeport_btn.Enabled = true;
             senddata_btn.Enabled = true;
+            get_package_btn.Enabled = true;
             filename = saved_file_name_txt.Text;
             path += filename;
         }
@@ -141,56 +142,53 @@ namespace WindowsFormsApp1
 
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            //serialDataIn += serialPort1.ReadByte();
+            Thread.Sleep(1);
             serialPort1.DataReceived += new SerialDataReceivedEventHandler(serialPort1_DataReceived);
-            this.Invoke(new EventHandler(ShowData));
-            
-            //Thread.Sleep(200);
+            this.Invoke(new EventHandler(ShowData));     
         }
 
         private void ShowData(object sender, EventArgs e)
         {
-            //Thread thread = new Thread(() => WriteToFile
-            //Thread thread = new Thread(WriteToFile);
-            //thread.Start();
-            //thread.Join();
-            //GC.Collect();
-            //GC.WaitForPendingFinalizers();
-            int length = serialPort1.BytesToRead;
-            byte[] bufferDataIn2 = new byte[length];
-
-            if (length == 1032)
+            try
             {
-                serialPort1.Read(bufferDataIn2, 0, length);
-                int checksum = 0;
-                checksum = crc16Calc(bufferDataIn2, length - 2);
-                byte[] bufferDataChecksum = bufferDataIn2[^2..];
+                int length = serialPort1.BytesToRead;
 
-                //if (BitConverter.IsLittleEndian)
-                //Array.Reverse(bufferDataChecksum);
-                int value = BitConverter.ToUInt16(bufferDataChecksum, 0);
 
-                //if (checksum == value)
+                if (length == 1032)
                 {
-                    for (int i = 6; i < bufferDataIn2.Length - 2; i++)
+                    byte[] bufferDataIn2 = new byte[length];
+                    serialPort1.Read(bufferDataIn2, 0, bufferDataIn2.Length);
+
+
+                    int checksum = 0;
+                    checksum = crc16Calc(bufferDataIn2, length - 2);
+                    byte[] bufferDataChecksum = bufferDataIn2[^2..];
+
+                    int value = BitConverter.ToUInt16(bufferDataChecksum, 0);
+
+                    if (checksum == value)
                     {
                         using (var stream = new FileStream(path, FileMode.Append))
                         {
-                            stream.WriteByte(bufferDataIn2[i]);
-                            stream.Flush();
-                            stream.Close();
-                            //stream.Dispose();
+                            for (int i = 6; i < bufferDataIn2.Length - 2; i++)
+                            {
+                                stream.WriteByte(bufferDataIn2[i]);
+                            }
                         }
-                        
                     }
-                    Thread.Sleep(20);
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-
                 }
             }
 
-            
+
+            //---------------------------------------------------------------------
+
+
+            catch (Exception err)
+            {
+                errortxt.Text = err.Message.ToString();
+            }
+                
+
         }
 
         private void get_package_btn_Click(object sender, EventArgs e)
@@ -199,26 +197,17 @@ namespace WindowsFormsApp1
             {
                 try
                 {
-                    String cam_package = get_package_txt.Text.Replace(" ", "");
-                    String originalCommand = "554501" + cam_package + "0023"; //Full command as String
+                    String cam_packages = get_package_txt.Text.Replace(" ", "");   // Camera packages amount as string
+                    int cam_packages_amount = int.Parse(get_package_txt.Text.Replace(" ", ""));      //Camera pakages amount as int
 
-                    char[] ch = originalCommand.ToCharArray(); //Command split as char array
-
-                    if (ch[2] == '4' && ch[3] == '9')
+                    for (int i =0; i <= cam_packages_amount; i++)
+                    {
+                        string hex = String.Format("{0:X2}", i);
+                        String originalCommand = "554501" + hex + "0023"; //Full command as String
                         serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-                    else if (ch[2] == '4' && ch[3] == '8')
-                    { //Command with H header
-                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-
+                        Thread.Sleep(100);
+                        
                     }
-                    else if (ch[2] == '4' && ch[3] == '5')
-                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-                    else if (ch[2] == '4' && ch[3] == '4')
-                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-                    else if (ch[2] == '5' && ch[3] == '1')
-                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-                    else
-                        errortxt.Text = "Your command is incorrect !";
                 }
 
                 catch (IOException er)
@@ -230,15 +219,6 @@ namespace WindowsFormsApp1
                 errortxt.Text = ("No command provided !");
         }
 
-        public static void AppendAllBytes(string path, byte bytes)
-        {
-            using (var stream = new FileStream(path, FileMode.Append))
-            {
-                stream.WriteByte(bytes);
-                stream.Flush();
-                //stream.Close();
-            }
-        }
 
         public int crc16Calc(byte[] bytes, int len)
         {
@@ -262,10 +242,6 @@ namespace WindowsFormsApp1
             return init_crc;
         }
 
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 
 
