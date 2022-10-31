@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
+using System.IO.Pipes;
 using System.IO.Ports;
 using System.Text;
 using System.Threading;
@@ -28,6 +30,7 @@ namespace WindowsFormsApp1
             closeport_btn.Enabled = false;
             senddata_btn.Enabled = false;
             get_package_btn.Enabled = false;
+            clear_btn.Enabled = false;
         }
 
 
@@ -35,34 +38,12 @@ namespace WindowsFormsApp1
         {
             errortxt.Text = "";
             pictureBox1.Image = null;
+            clearDataFile();
             serialPort1.DiscardInBuffer();
             serialPort1.DiscardOutBuffer();
-        }
-
-        private void getdata_btn_Click_1(object sender, EventArgs e)
-        {
-            try
-            {
-
-                string rawData = System.IO.File.ReadAllText(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\textfile\newfile.txt");
-                byte[] image = HexString2Bytes(rawData);
-
-                File.WriteAllBytes(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\Image\Snapshot.jpg", image);
-
-                /*if (pictureBox1.Image == null && pictureBox2.Image == null)
-                {
-                    //pictureBox1.Image = Image.FromFile(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\Image\Snapshot.png");
-                    pictureBox2.Image = Image.FromFile(@"C:\Users\7490\Documents\VisualStudioProjects\WindowsFormsApp1\Image\Snapshot.jpg");
-                }*/
-            }
-
-            catch (IOException err)
-            {
-                errortxt.Text = err.ToString();
-            }
-
 
         }
+
 
         private static byte[] HexString2Bytes(string hexString)
         {
@@ -124,27 +105,38 @@ namespace WindowsFormsApp1
             closeport_btn.Enabled = true;
             senddata_btn.Enabled = true;
             get_package_btn.Enabled = true;
+            clear_btn.Enabled = true;
             filename = saved_file_name_txt.Text;
             path += filename;
+
         }
         private void closeport_btn_Click(object sender, EventArgs e)
         {
-            if (serialPort1.IsOpen)
+            try
             {
-                serialPort1.DiscardOutBuffer();
                 serialPort1.DiscardInBuffer();
+                serialPort1.DiscardOutBuffer();
                 serialPort1.Close();
+                
                 openport_btn.Enabled = true;
                 closeport_btn.Enabled = false;
                 senddata_btn.Enabled = false;
+                clear_btn.Enabled = false;
+            }
+
+            catch (Exception ee)
+            {
+                errortxt.Text = ee.ToString();
             }
         }
 
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             Thread.Sleep(1);
-            serialPort1.DataReceived += new SerialDataReceivedEventHandler(serialPort1_DataReceived);
-            this.Invoke(new EventHandler(ShowData));     
+            //serialPort1.DataReceived += new SerialDataReceivedEventHandler(serialPort1_DataReceived);
+            //this.Invoke(new EventHandler(ShowData));
+            //serialPort1.ReceivedBytesThreshold = 1032 ;
+
         }
 
         private void ShowData(object sender, EventArgs e)
@@ -152,7 +144,6 @@ namespace WindowsFormsApp1
             try
             {
                 int length = serialPort1.BytesToRead;
-
 
                 if (length == 1032)
                 {
@@ -168,7 +159,8 @@ namespace WindowsFormsApp1
 
                     if (checksum == value)
                     {
-                        using (var stream = new FileStream(path, FileMode.Append))
+                        //FileStream fileStream = File.Open(path, File.Exists(path) ? FileMode.Append : FileMode.OpenOrCreate);
+                        using (FileStream stream = new FileStream(path, FileMode.Append))
                         {
                             for (int i = 6; i < bufferDataIn2.Length - 2; i++)
                             {
@@ -183,8 +175,7 @@ namespace WindowsFormsApp1
             //---------------------------------------------------------------------
 
 
-            catch (Exception err)
-            {
+            catch (Exception err)       {
                 errortxt.Text = err.Message.ToString();
             }
                 
@@ -200,23 +191,31 @@ namespace WindowsFormsApp1
                     String cam_packages = get_package_txt.Text.Replace(" ", "");   // Camera packages amount as string
                     int cam_packages_amount = int.Parse(get_package_txt.Text.Replace(" ", ""));      //Camera pakages amount as int
 
-                    for (int i =0; i <= cam_packages_amount; i++)
+                    for (int i = 0; i <= cam_packages_amount; i++)
                     {
                         string hex = String.Format("{0:X2}", i);
                         String originalCommand = "554501" + hex + "0023"; //Full command as String
                         serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-                        Thread.Sleep(100);
-                        
+
+                        ShowData(sender, e);
+
+                       
+                        Thread.Sleep(220);
                     }
+
+                    pictureBox1.Image = Image.FromFile(path);
+                    Thread.CurrentThread.Interrupt();
                 }
 
                 catch (IOException er)
                 {
                     errortxt.Text = er.ToString();
                 }
+
             }
             else
                 errortxt.Text = ("No command provided !");
+
         }
 
 
@@ -242,6 +241,12 @@ namespace WindowsFormsApp1
             return init_crc;
         }
 
+        private void clearDataFile()
+        {
+            FileStream fileStream = File.Open(path, FileMode.Open);
+            fileStream.SetLength(0);
+            fileStream.Close();
+        }
     }
 
 
