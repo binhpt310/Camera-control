@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.IO.Pipes;
 using System.IO.Ports;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -13,8 +12,20 @@ namespace WindowsFormsApp1
     public partial class Form1 : Form
     {
 
-        static String filename = "";
-        String path = "C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/textfile/";
+        String filename = "";
+
+        String folderpath = "C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/textfile/";
+
+        int packageAmount ;
+        
+        public string path()
+        {
+            String filename = "";
+            String folderpath = "C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/textfile/";
+            return folderpath + filename;
+        }
+        
+
 
         public Form1()
         {
@@ -27,23 +38,90 @@ namespace WindowsFormsApp1
             comboBox1.Items.AddRange(portList);
 
             openport_btn.Enabled = true;
-            closeport_btn.Enabled = false;
+            //closeport_btn.Enabled = false;
             senddata_btn.Enabled = false;
             get_package_btn.Enabled = false;
-            clear_btn.Enabled = false;
+
+            filename = saved_file_name_txt.Text;
+
         }
 
-
-        private void clear_btn_Click(object sender, EventArgs e)
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            errortxt.Text = "";
-            pictureBox1.Image = null;
-            clearDataFile();
+
+        }
+
+        private void senddata_btn_Click(object sender, EventArgs e)
+        {
+
+            if (!serialPort1.IsOpen)
+                serialPort1.Open();
+            if (String.IsNullOrEmpty(command_txt.Text) == false)
+            {
+                try
+                {
+                    String originalCommand = command_txt.Text.Replace(" ", ""); //Full command as String
+                    char[] ch = originalCommand.ToCharArray(); //Command split as char array
+
+                    if (ch != null)
+                    {
+                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+                        Thread.Sleep(1000);
+                        get_package_txt.Text = ShowPackageAmount(sender, e).ToString();
+                    }
+                    else
+                        errortxt.Text = "Your command is incorrect !";
+                    //Thread.Sleep(200);
+                    
+
+                }
+
+                catch (IOException er)
+                {
+                    errortxt.Text = er.ToString();
+                }
+            }
+            else
+                errortxt.Text = ("No command provided !");
+
+
+            //-------------------------------- Close port after done ---------------------------------------------//
             serialPort1.DiscardInBuffer();
             serialPort1.DiscardOutBuffer();
+            serialPort1.Close();
+        }
+
+        private void openport_btn_Click(object sender, EventArgs e)
+        {
+            serialPort1.PortName = comboBox1.Text;
+            serialPort1.BaudRate = Convert.ToInt32(baudrate_txt.Text);
+            serialPort1.Open();
+            openport_btn.Enabled = false;
+            //closeport_btn.Enabled = true;
+            senddata_btn.Enabled = true;
+            get_package_btn.Enabled = true;
 
         }
 
+        private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            Thread.Sleep(1);
+            //serialPort1.DataReceived += new SerialDataReceivedEventHandler(serialPort1_DataReceived);
+            //this.Invoke(new EventHandler(ShowData));
+            //serialPort1.ReceivedBytesThreshold = 1032 ;
+
+        }
+
+        private void get_package_btn_Click(object sender, EventArgs e)
+        {
+            if (!serialPort1.IsOpen)
+                serialPort1.Open();
+
+            Thread workerThread = new Thread(unused => this.readAndWriteData(sender, e));
+            workerThread.Start(readAndWriteData);
+        }
+
+        //-------------------------------------------- Sel-defined functions -----------------------------------------------------//
 
         private static byte[] HexString2Bytes(string hexString)
         {
@@ -56,90 +134,7 @@ namespace WindowsFormsApp1
             return bytes;
         }
 
-        private void senddata_btn_Click(object sender, EventArgs e)
-        {
-            if (String.IsNullOrEmpty(command_txt.Text) == false)
-            {
-                try
-                {
-                    String originalCommand = command_txt.Text.Replace(" ", ""); //Full command as String
-                    char[] ch = originalCommand.ToCharArray(); //Command split as char array
-
-                    if (ch[2] == '4' && ch[3] == '9')
-                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-                    else if (ch[2] == '4' && ch[3] == '8')
-                    { //Command with H header
-                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-
-                    }
-                    else if (ch[2] == '4' && ch[3] == '5')
-                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-                    else if (ch[2] == '4' && ch[3] == '4')
-                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-                    else if (ch[2] == '5' && ch[3] == '1')
-                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-                    else
-                        errortxt.Text = "Your command is incorrect !";
-                }
-
-                catch (IOException er)
-                {
-                    errortxt.Text = er.ToString();
-                }
-            }
-            else
-                errortxt.Text = ("No command provided !");
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-           
-        }
-
-        private void openport_btn_Click(object sender, EventArgs e)
-        {
-            serialPort1.PortName = comboBox1.Text;
-            serialPort1.BaudRate = Convert.ToInt32(baudrate_txt.Text);
-            serialPort1.Open();
-            openport_btn.Enabled = false;
-            closeport_btn.Enabled = true;
-            senddata_btn.Enabled = true;
-            get_package_btn.Enabled = true;
-            clear_btn.Enabled = true;
-            filename = saved_file_name_txt.Text;
-            path += filename;
-
-        }
-        private void closeport_btn_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                serialPort1.DiscardInBuffer();
-                serialPort1.DiscardOutBuffer();
-                serialPort1.Close();
-                
-                openport_btn.Enabled = true;
-                closeport_btn.Enabled = false;
-                senddata_btn.Enabled = false;
-                clear_btn.Enabled = false;
-            }
-
-            catch (Exception ee)
-            {
-                errortxt.Text = ee.ToString();
-            }
-        }
-
-        private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            Thread.Sleep(1);
-            //serialPort1.DataReceived += new SerialDataReceivedEventHandler(serialPort1_DataReceived);
-            //this.Invoke(new EventHandler(ShowData));
-            //serialPort1.ReceivedBytesThreshold = 1032 ;
-
-        }
-
-        private void ShowData(object sender, EventArgs e)
+        private void ShowData(object sender, EventArgs e, String showDataPath)
         {
             try
             {
@@ -150,75 +145,53 @@ namespace WindowsFormsApp1
                     byte[] bufferDataIn2 = new byte[length];
                     serialPort1.Read(bufferDataIn2, 0, bufferDataIn2.Length);
 
-
                     int checksum = 0;
-                    checksum = crc16Calc(bufferDataIn2, length - 2);
-                    byte[] bufferDataChecksum = bufferDataIn2[^2..];
+                    checksum = crc16Calc(bufferDataIn2, length - 2);    //Without checksum
+
+                    byte[] bufferDataChecksum = bufferDataIn2[^2..];    //Get the last 2 byte of the buffer (Ex: a1 86)
 
                     int value = BitConverter.ToUInt16(bufferDataChecksum, 0);
 
                     if (checksum == value)
                     {
                         //FileStream fileStream = File.Open(path, File.Exists(path) ? FileMode.Append : FileMode.OpenOrCreate);
-                        using (FileStream stream = new FileStream(path, FileMode.Append))
+                        using (FileStream stream = new FileStream(showDataPath, FileMode.Append))
                         {
-                            for (int i = 6; i < bufferDataIn2.Length - 2; i++)
+                            for (int i = 6; i < bufferDataIn2.Length - 2; i++)  // Only the image data, without the command header and checksum
                             {
                                 stream.WriteByte(bufferDataIn2[i]);
                             }
+                            stream.Close();
                         }
                     }
                 }
             }
 
-
-            //---------------------------------------------------------------------
-
-
-            catch (Exception err)       {
-                errortxt.Text = err.Message.ToString();
-            }
-                
-
-        }
-
-        private void get_package_btn_Click(object sender, EventArgs e)
-        {
-            if (String.IsNullOrEmpty(get_package_txt.Text) == false)
+            catch (Exception err)
             {
-                try
-                {
-                    String cam_packages = get_package_txt.Text.Replace(" ", "");   // Camera packages amount as string
-                    int cam_packages_amount = int.Parse(get_package_txt.Text.Replace(" ", ""));      //Camera pakages amount as int
+                MessageBox.Show(err.Message.ToString());
+            }
 
-                    for (int i = 0; i <= cam_packages_amount; i++)
-                    {
-                        string hex = String.Format("{0:X2}", i);
-                        String originalCommand = "554501" + hex + "0023"; //Full command as String
-                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+        }        //Need path
 
-                        ShowData(sender, e);
+        private int ShowPackageAmount(object sender, EventArgs e)
+        {
+            int length = serialPort1.BytesToRead;
+            if (length > 0)
+            {
+                byte[] bufferDataIn = new byte[length];
+                serialPort1.Read(bufferDataIn, 0, bufferDataIn.Length);
 
-                       
-                        Thread.Sleep(220);
-                    }
+                byte[] fromBuffer = bufferDataIn.Skip(11).Take(1).ToArray();
 
-                    pictureBox1.Image = Image.FromFile(path);
-                    Thread.CurrentThread.Interrupt();
-                }
+                packageAmount = fromBuffer[0];
 
-                catch (IOException er)
-                {
-                    errortxt.Text = er.ToString();
-                }
-
+                return packageAmount;
             }
             else
-                errortxt.Text = ("No command provided !");
+                return packageAmount;
 
         }
-
-
         public int crc16Calc(byte[] bytes, int len)
         {
             int init_crc = 0x00;
@@ -241,14 +214,69 @@ namespace WindowsFormsApp1
             return init_crc;
         }
 
-        private void clearDataFile()
+        private void readAndWriteData(object sender, EventArgs e)
         {
-            FileStream fileStream = File.Open(path, FileMode.Open);
-            fileStream.SetLength(0);
-            fileStream.Close();
-        }
-    }
+            // Increase file path by 1 if the file is existed
 
+            string originPath = path();
+            string readwritePath = updatePathName(originPath);
+
+            if (String.IsNullOrEmpty(get_package_txt.Text) == false)
+            {
+                try
+                {
+                    String cam_packages = get_package_txt.Text.Replace(" ", "");   // Camera packages amount as string
+                    int cam_packages_amount = int.Parse(get_package_txt.Text.Replace(" ", ""));      //Camera pakages amount as int
+
+                    for (int i = 0; i <= cam_packages_amount; i++)
+                    {
+                        string hex = String.Format("{0:X2}", i);
+                        String originalCommand = "554501" + hex + "0023"; //Full command as String
+                        serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+
+                        ShowData(sender, e, readwritePath);
+                        Thread.Sleep(220);
+                    }
+
+                    pictureBox1.Image = Image.FromFile(readwritePath);
+
+                    //-------------------------------- Close port after done ---------------------------------------------//
+                    serialPort1.DiscardInBuffer();
+                    serialPort1.DiscardOutBuffer();
+                    serialPort1.Close();
+                }
+
+                catch (IOException er)
+                {
+                    MessageBox.Show(er.Message);
+                }
+
+            }
+            else
+                MessageBox.Show("No command");
+        } //Need path
+
+        private string updatePathName(String upPath)
+        {
+
+            String filename_initial = folderpath + filename;
+            String filename_current = filename_initial;
+            int count = 1;
+            while (File.Exists(filename_current))
+            {
+                count++;
+                filename_current = Path.GetDirectoryName(filename_initial)
+                                 + Path.DirectorySeparatorChar
+                                 + Path.GetFileNameWithoutExtension(filename_initial)
+                                 + count.ToString()
+                                 + Path.GetExtension(filename_initial);
+            }
+
+            upPath = filename_current;
+            return upPath;
+        }
+
+    }
 
     /*
     BackgroundWorker bw = new BackgroundWorker();
