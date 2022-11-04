@@ -14,19 +14,17 @@ namespace WindowsFormsApp1
 
         String filename = "";
 
-        String folderpath = "C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/textfile/";
+        String folderpath = "";
 
         int packageAmount ;
         
         public string path()
         {
-            String filename = "";
-            String folderpath = "C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/textfile/";
+            //String filename = "";
+            //String folderpath = "C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/textfile/";
             return folderpath + filename;
         }
         
-
-
         public Form1()
         {
             InitializeComponent();
@@ -38,7 +36,6 @@ namespace WindowsFormsApp1
             comboBox1.Items.AddRange(portList);
 
             openport_btn.Enabled = true;
-            //closeport_btn.Enabled = false;
             senddata_btn.Enabled = false;
             get_package_btn.Enabled = false;
 
@@ -46,14 +43,8 @@ namespace WindowsFormsApp1
 
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-
-        }
-
         private void senddata_btn_Click(object sender, EventArgs e)
         {
-
             if (!serialPort1.IsOpen)
                 serialPort1.Open();
             if (String.IsNullOrEmpty(command_txt.Text) == false)
@@ -71,9 +62,6 @@ namespace WindowsFormsApp1
                     }
                     else
                         errortxt.Text = "Your command is incorrect !";
-                    //Thread.Sleep(200);
-                    
-
                 }
 
                 catch (IOException er)
@@ -86,8 +74,8 @@ namespace WindowsFormsApp1
 
 
             //-------------------------------- Close port after done ---------------------------------------------//
-            serialPort1.DiscardInBuffer();
-            serialPort1.DiscardOutBuffer();
+            //serialPort1.DiscardInBuffer();
+            //serialPort1.DiscardOutBuffer();
             serialPort1.Close();
         }
 
@@ -123,6 +111,7 @@ namespace WindowsFormsApp1
 
         //-------------------------------------------- Sel-defined functions -----------------------------------------------------//
 
+        // Convert hex string in to byte array
         private static byte[] HexString2Bytes(string hexString)
         {
             int bytesCount = (hexString.Length) / 2;
@@ -134,6 +123,7 @@ namespace WindowsFormsApp1
             return bytes;
         }
 
+        // Receive raw data from packages and write raw data as byte array to file
         private void ShowData(object sender, EventArgs e, String showDataPath)
         {
             try
@@ -172,8 +162,9 @@ namespace WindowsFormsApp1
                 MessageBox.Show(err.Message.ToString());
             }
 
-        }        //Need path
+        }       
 
+        // Extract the number of the packages from camera command
         private int ShowPackageAmount(object sender, EventArgs e)
         {
             int length = serialPort1.BytesToRead;
@@ -192,6 +183,8 @@ namespace WindowsFormsApp1
                 return packageAmount;
 
         }
+
+        // Calculate checksum of the package
         public int crc16Calc(byte[] bytes, int len)
         {
             int init_crc = 0x00;
@@ -214,6 +207,7 @@ namespace WindowsFormsApp1
             return init_crc;
         }
 
+        // 
         private void readAndWriteData(object sender, EventArgs e)
         {
             // Increase file path by 1 if the file is existed
@@ -234,15 +228,24 @@ namespace WindowsFormsApp1
                         String originalCommand = "554501" + hex + "0023"; //Full command as String
                         serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
 
+                        //MethodInvoker m = new MethodInvoker( () => progressBar1.Value = i * progressBar1.Maximum / cam_packages_amount);
+                        //progressBar1.Invoke(m);
+
+                        /*Invoke((MethodInvoker)delegate
+                        {
+                            progressBar1.Value = i * progressBar1.Maximum / cam_packages_amount;
+                        });*/
+                        
                         ShowData(sender, e, readwritePath);
+
                         Thread.Sleep(220);
                     }
 
                     pictureBox1.Image = Image.FromFile(readwritePath);
 
                     //-------------------------------- Close port after done ---------------------------------------------//
-                    serialPort1.DiscardInBuffer();
-                    serialPort1.DiscardOutBuffer();
+                   // serialPort1.DiscardInBuffer();
+                   // serialPort1.DiscardOutBuffer();
                     serialPort1.Close();
                 }
 
@@ -254,7 +257,7 @@ namespace WindowsFormsApp1
             }
             else
                 MessageBox.Show("No command");
-        } //Need path
+        } 
 
         private string updatePathName(String upPath)
         {
@@ -276,6 +279,25 @@ namespace WindowsFormsApp1
             return upPath;
         }
 
+        private void choose_folder_btn_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = folderBrowserDialog1.ShowDialog();
+            if (dialogResult == DialogResult.OK)
+            {
+                choose_folder_path_txt.Text = folderBrowserDialog1.SelectedPath;
+                folderpath = folderBrowserDialog1.SelectedPath + "\\";
+            }
+        }
+
+        private void folderBrowserDialog1_HelpRequest(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
     /*
