@@ -29,7 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Text.EncoderReplacementFallback encoderReplacementFallback4 = new System.Text.EncoderReplacementFallback();
+            System.Text.DecoderReplacementFallback decoderReplacementFallback1 = new System.Text.DecoderReplacementFallback();
+            System.Text.EncoderReplacementFallback encoderReplacementFallback1 = new System.Text.EncoderReplacementFallback();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -98,6 +99,7 @@
             this.baudrate_txt.Size = new System.Drawing.Size(125, 31);
             this.baudrate_txt.TabIndex = 11;
             this.baudrate_txt.Text = "115200";
+      
             // 
             // label5
             // 
@@ -119,7 +121,7 @@
             this.command_txt.Name = "command_txt";
             this.command_txt.Size = new System.Drawing.Size(390, 50);
             this.command_txt.TabIndex = 13;
-            this.command_txt.Text = "55 48 01 32 00 04 23";
+            this.command_txt.Text = "55 48 01 32 00 0f 23";
             // 
             // label6
             // 
@@ -143,7 +145,7 @@
             this.senddata_btn.Name = "senddata_btn";
             this.senddata_btn.Size = new System.Drawing.Size(390, 59);
             this.senddata_btn.TabIndex = 14;
-            this.senddata_btn.Text = "Send data";
+            this.senddata_btn.Text = "Send command";
             this.senddata_btn.UseVisualStyleBackColor = false;
             this.senddata_btn.Click += new System.EventHandler(this.senddata_btn_Click);
             // 
@@ -151,7 +153,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.label1.Location = new System.Drawing.Point(59, 503);
+            this.label1.Location = new System.Drawing.Point(57, 409);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(124, 25);
             this.label1.TabIndex = 17;
@@ -161,11 +163,11 @@
             // 
             // errortxt
             // 
-            this.errortxt.Location = new System.Drawing.Point(14, 546);
+            this.errortxt.Location = new System.Drawing.Point(14, 450);
             this.errortxt.Multiline = true;
             this.errortxt.Name = "errortxt";
             this.errortxt.ReadOnly = true;
-            this.errortxt.Size = new System.Drawing.Size(215, 157);
+            this.errortxt.Size = new System.Drawing.Size(215, 253);
             this.errortxt.TabIndex = 16;
             // 
             // openport_btn
@@ -173,9 +175,9 @@
             this.openport_btn.BackColor = System.Drawing.Color.SpringGreen;
             this.openport_btn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.openport_btn.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.openport_btn.Location = new System.Drawing.Point(22, 409);
+            this.openport_btn.Location = new System.Drawing.Point(263, 503);
             this.openport_btn.Name = "openport_btn";
-            this.openport_btn.Size = new System.Drawing.Size(207, 66);
+            this.openport_btn.Size = new System.Drawing.Size(270, 66);
             this.openport_btn.TabIndex = 20;
             this.openport_btn.Text = "Open Port";
             this.openport_btn.UseVisualStyleBackColor = false;
@@ -185,9 +187,9 @@
             // 
             this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(245, 670);
+            this.comboBox1.Location = new System.Drawing.Point(263, 670);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(155, 33);
+            this.comboBox1.Size = new System.Drawing.Size(137, 33);
             this.comboBox1.TabIndex = 22;
             this.comboBox1.Text = "COM16";
             // 
@@ -209,7 +211,6 @@
             this.serialPort1.StopBits = System.IO.Ports.StopBits.One;
             this.serialPort1.WriteBufferSize = 2048;
             this.serialPort1.WriteTimeout = -1;
-            this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
             // get_package_txt
             // 
@@ -315,10 +316,6 @@
             this.groupBox2.Size = new System.Drawing.Size(436, 373);
             this.groupBox2.TabIndex = 36;
             this.groupBox2.TabStop = false;
-            // 
-            // folderBrowserDialog1
-            // 
-            this.folderBrowserDialog1.HelpRequest += new System.EventHandler(this.folderBrowserDialog1_HelpRequest);
             // 
             // progressBar1
             // 

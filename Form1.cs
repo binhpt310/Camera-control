@@ -16,15 +16,15 @@ namespace WindowsFormsApp1
 
         String folderpath = "";
 
-        int packageAmount ;
-        
+        int packageAmount;
+
         public string path()
         {
             //String filename = "";
             //String folderpath = "C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/textfile/";
             return folderpath + filename;
         }
-        
+
         public Form1()
         {
             InitializeComponent();
@@ -130,7 +130,7 @@ namespace WindowsFormsApp1
             {
                 int length = serialPort1.BytesToRead;
 
-                if (length == 1032)
+                if (length == 3848)
                 {
                     byte[] bufferDataIn2 = new byte[length];
                     serialPort1.Read(bufferDataIn2, 0, bufferDataIn2.Length);
@@ -139,7 +139,7 @@ namespace WindowsFormsApp1
                     checksum = crc16Calc(bufferDataIn2, length - 2);    //Without checksum
 
                     byte[] bufferDataChecksum = bufferDataIn2[^2..];    //Get the last 2 byte of the buffer (Ex: a1 86)
-
+                    byte[] clone = bufferDataIn2.Skip(6).Take(3840).ToArray();
                     int value = BitConverter.ToUInt16(bufferDataChecksum, 0);
 
                     if (checksum == value)
@@ -151,8 +151,9 @@ namespace WindowsFormsApp1
                             {
                                 stream.WriteByte(bufferDataIn2[i]);
                             }
-                            stream.Close();
+                            //stream.Close();
                         }
+                        //File.WriteAllBytes(showDataPath, clone);
                     }
                 }
             }
@@ -162,7 +163,7 @@ namespace WindowsFormsApp1
                 MessageBox.Show(err.Message.ToString());
             }
 
-        }       
+        }
 
         // Extract the number of the packages from camera command
         private int ShowPackageAmount(object sender, EventArgs e)
@@ -228,24 +229,16 @@ namespace WindowsFormsApp1
                         String originalCommand = "554501" + hex + "0023"; //Full command as String
                         serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
 
-                        //MethodInvoker m = new MethodInvoker( () => progressBar1.Value = i * progressBar1.Maximum / cam_packages_amount);
-                        //progressBar1.Invoke(m);
-
-                        /*Invoke((MethodInvoker)delegate
-                        {
-                            progressBar1.Value = i * progressBar1.Maximum / cam_packages_amount;
-                        });*/
-                        
                         ShowData(sender, e, readwritePath);
 
-                        Thread.Sleep(220);
+                        Thread.Sleep(455);
                     }
 
                     pictureBox1.Image = Image.FromFile(readwritePath);
 
                     //-------------------------------- Close port after done ---------------------------------------------//
-                   // serialPort1.DiscardInBuffer();
-                   // serialPort1.DiscardOutBuffer();
+                    // serialPort1.DiscardInBuffer();
+                    // serialPort1.DiscardOutBuffer();
                     serialPort1.Close();
                 }
 
@@ -257,7 +250,7 @@ namespace WindowsFormsApp1
             }
             else
                 MessageBox.Show("No command");
-        } 
+        }
 
         private string updatePathName(String upPath)
         {
@@ -300,40 +293,6 @@ namespace WindowsFormsApp1
         }
     }
 
-    /*
-    BackgroundWorker bw = new BackgroundWorker();
-            bw.WorkerReportsProgress = true;
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-            {
-                BackgroundWorker b = o as BackgroundWorker;
-                int length = serialPort1.BytesToRead;
-                bool correct = false;
-                byte[] bufferDataIn2 = new byte[length];
-
-                if (length == 1032)
-                    correct = true;
-
-                if (correct)
-                {
-                    //BlockingRead(serialPort1, bufferDataIn2, 0, length);
-                    serialPort1.Read(bufferDataIn2, 0, length);
-                    int checksum = 0;
-                    checksum = crc16Calc(bufferDataIn2, length - 2);
-
-
-                    for (int i = 6; i < bufferDataIn2.Length - 2; i++)
-                    {
-                        using (var stream = new FileStream(path, FileMode.Append))
-                        {
-                            stream.WriteByte(bufferDataIn2[i]);
-                            stream.Flush();
-                            stream.Close();
-                        }
-                    }
-                }
-            });
-            bw.RunWorkerAsync();
-     */
 }
 
 
