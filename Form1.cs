@@ -22,6 +22,8 @@ namespace WindowsFormsApp1
         int packageAmount;
 
         int length = 0;
+
+        bool isFull = true;
         public string path()
         {
             //String filename = "";
@@ -42,7 +44,7 @@ namespace WindowsFormsApp1
             openport_btn.Enabled = true;
             senddata_btn.Enabled = false;
 
-            filename = saved_file_name_txt.Text;
+
 
         }
 
@@ -90,25 +92,22 @@ namespace WindowsFormsApp1
                     int packageSizeNumber1 = Int32.Parse(packageSizeHex.Substring(2), NumberStyles.HexNumber);
                     length = packageSizeNumber1 * 256 + 8;
 
-                    //Need a for loop here
+                    int img_number = Int32.Parse(img_num_txt.Text);
 
                     Thread workerThread = new Thread(new ThreadStart(() =>
                     {
-                        for (int i = 0; i <= 5; i++)
+                        for (int i = 0; i < img_number ; i++)
                         {
                             if (ch != null)
                             {
                                 serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
                                 Thread.Sleep(200);
-
-                                get_package_txt.Text = ShowPackageAmount(sender, e).ToString();
-
-                                //Thread workerThread = new Thread(() => this.ReadAndWriteData(sender, e));
-
+                                String cam_packages = ShowPackageAmount(sender, e).ToString().Replace(" ", "");
                                 senddata_btn.BeginInvoke(new MethodInvoker(() => { senddata_btn.Enabled = false; }));
-                                ReadAndWriteData(sender, e);
+                                ReadAndWriteData(sender, e, cam_packages);
                                 serialPort1.BaseStream.Flush();
                                 serialPort1.DiscardOutBuffer();
+                                serialPort1.DiscardInBuffer();
                                 senddata_btn.BeginInvoke(new MethodInvoker(() => { senddata_btn.Enabled = true; }));
                             }
                             else
@@ -117,7 +116,7 @@ namespace WindowsFormsApp1
                     }
                     ));
                     workerThread.Start();
-                    //workerThread.Join();
+                  
                 }
 
                 catch (IOException er)
@@ -213,7 +212,11 @@ namespace WindowsFormsApp1
                         }
                         stream.Close();
                     }
+                    isFull = true;
                 }
+
+                else 
+                    isFull = false;
                 //}
             }
 
@@ -224,93 +227,62 @@ namespace WindowsFormsApp1
 
         }
 
-        private void ReadAndWriteData(object sender, EventArgs e)
+        private void ReadAndWriteData(object sender, EventArgs e, String cam_packages)
         {
             // Increase file path by 1 if the file is existed
             string originPath = path();
             string readwritePath = updatePathName(originPath);
-            //int j = 1;
-
-            if (String.IsNullOrEmpty(get_package_txt.Text) == false)
+            int cam_packages_amount = int.Parse(cam_packages);      //Camera pakages amount as int
+            try
             {
-                try
+                Stopwatch stopwatch = new Stopwatch();  // Create new stopwatch
+                stopwatch.Start();
+
+                if (cam_packages_amount < 100 && cam_packages_amount > 1)
                 {
-                    Stopwatch stopwatch = new Stopwatch();  // Create new stopwatch
-
-                    String cam_packages = get_package_txt.Text.Replace(" ", "");   // Camera packages amount as string
-                    int cam_packages_amount = int.Parse(get_package_txt.Text.Replace(" ", ""));      //Camera pakages amount as int
-
-                    stopwatch.Start();
-
-                    if (cam_packages_amount < 100 && cam_packages_amount > 1)
+                    byte[] bufferDataIn2 = new byte[length];
+                    for (int i = 0; i < cam_packages_amount; i++)
                     {
-                        for (int i = 0; i < cam_packages_amount; i++)
+
+                        ProcessingData(i, cam_packages_amount, bufferDataIn2);
+                        ShowData(sender, e, readwritePath, length, bufferDataIn2);
+                        
+                        while (!isFull)
                         {
-                            string hex = String.Format("{0:X2}", i);
-                            String originalCommand = "554501" + hex + "0023"; //Full command as String
-                            serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);      //Write command to serial port device
-
-                            progressBar1.BeginInvoke(new MethodInvoker(() =>
-                            {
-                                progressBar1.Value = i * progressBar1.Maximum / (cam_packages_amount - 1);
-                            }
-                            ));
-
-                            byte[] bufferDataIn2 = new byte[length];
-                            int k = 0;
-                            try
-                            {
-                                while (k < length)
-                                {
-                                    bufferDataIn2[k] = (byte)serialPort1.ReadByte();
-                                    k++;
-                                }
-                            }
-
-                            catch (TimeoutException error)
-                            {
-                                errortxt.BeginInvoke(new MethodInvoker(() => { errortxt.Text += "The read operation has reached timeout!\r\n"; }));
-                            }
-
-                            /*double elapsedsec1 = elapsedsec/j;
-                            j++;
-                            string elapsed = "Time elapsed for packet number" + j + "(seconds): " + elapsedsec1.ToString() + "\r\n";*/
-                            //serialPort1.Read(bufferDataIn2, 0, bufferDataIn2.Length);
+                            ProcessingData(i, cam_packages_amount, bufferDataIn2);
                             ShowData(sender, e, readwritePath, length, bufferDataIn2);
                         }
-                        stopwatch.Stop();
 
-                        try
-                        {
-                            pictureBox1.Image = Image.FromFile(readwritePath);
-                        }
-
-                        catch
-                        {
-                            MessageBox.Show("Image is corrupted or not found");
-                        }
 
                     }
+                    stopwatch.Stop();
 
-                    double elapsedsec = stopwatch.Elapsed.TotalSeconds;
-                    double elapsedsec1 = Truncate(elapsedsec, 4);
-                    string elapsed = "Time elapsed for 1 image (seconds): " + elapsedsec1 + "\r\n";
-                    errortxt.BeginInvoke(new MethodInvoker(() => { errortxt.Text += elapsed; }));
+                    try
+                    {
+                        pictureBox1.Image = Image.FromFile(readwritePath);
+                    }
+
+                    catch
+                    {
+                        MessageBox.Show("Image is corrupted or not found");
+                    }
+
                 }
-
-                catch (IOException er)
-                {
-                    MessageBox.Show(er.Message);
-                }
-
+                double elapsedsec = stopwatch.Elapsed.TotalSeconds;
+                double elapsedsec1 = Truncate(elapsedsec, 4);
+                string elapsed = "Time elapsed for 1 image (seconds): " + elapsedsec1 + "\r\n";
+                errortxt.BeginInvoke(new MethodInvoker(() => { errortxt.Text += elapsed; }));
             }
-            else
-                MessageBox.Show("No command");
+
+            catch (IOException er)
+            {
+                MessageBox.Show(er.Message);
+            }
         }
 
         private string updatePathName(String upPath)
         {
-
+            filename = saved_file_name_txt.Text;
             String filename_initial = folderpath + filename;
             String filename_current = filename_initial;
             int count = 1;
@@ -375,6 +347,43 @@ namespace WindowsFormsApp1
             openport_btn.Enabled = true;
             senddata_btn.Enabled = false;
 
+
+        }
+
+        //Append the package data to buffer array
+        private void ProcessingData(int i, int cam_packages_amount, byte[] bufferDataIn2) 
+        {
+            string hex = String.Format("{0:X2}", i);
+            String originalCommand = "554501" + hex + "0023"; //Full command as String
+            serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);      //Write command to serial port device
+
+            progressBar1.BeginInvoke(new MethodInvoker(() =>
+            {
+                progressBar1.Value = i * progressBar1.Maximum / (cam_packages_amount - 1);
+            }
+            ));
+            
+            int k = 0;
+            try
+            {
+                while (k < length)
+                {
+                    bufferDataIn2[k] = (byte)serialPort1.ReadByte();
+                    k++;
+                }
+
+                while (bufferDataIn2.Length < length)
+                    ProcessingData(i, cam_packages_amount, bufferDataIn2);
+            }
+
+            catch (TimeoutException)
+            {
+                errortxt.BeginInvoke(new MethodInvoker(() => { errortxt.Text += "The read operation has reached timeout!\r\n"; }));
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
 
         }
     }
