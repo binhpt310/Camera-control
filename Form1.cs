@@ -24,6 +24,8 @@ namespace WindowsFormsApp1
         int length = 0;
 
         bool isFull = true;
+
+        string camID = "01";
         public string path()
         {
             //String filename = "";
@@ -382,8 +384,43 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void label1_Click(object sender, EventArgs e)
+
+        private void triger_io_btn_Click(object sender, EventArgs e)
         {
+            int[] io = { 0, 0, 0, 0, 0 };
+            CheckBox[] cb = { io1_checkbox, io2_checkbox, io3_checkbox, io4_checkbox, io5_checkbox };
+
+            for (int i = 0; i <5; i++)
+            {
+                if (cb[i].Checked)
+                    io[i] = 1;
+                else 
+                    io[i] = 0;
+            }
+
+            string str = string.Join("", io).Replace(" ", "");
+            string hex = Convert.ToInt32(str, 2).ToString("X");
+
+            String originalCommand = "";
+            if (hex.Length == 1)
+                originalCommand = "5544" + camID + "0" + hex + "23";
+            else
+                originalCommand = "5544" + camID + hex + "23";
+
+            serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+        }
+
+        private void offline_enable_btn_Click(object sender, EventArgs e)
+        {
+            String originalCommand = "5547" + camID + "23"; //Full command as String
+            serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+        }
+
+        private void change_camid_btn_Click(object sender, EventArgs e)
+        {
+            String originalCommand = "5544" + current_id_txt.Text.ToString() + new_id_txt.Text.ToString() + "23";
+
+            camID = new_id_txt.Text.ToString();
 
         }
     }
