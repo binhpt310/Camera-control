@@ -24,6 +24,8 @@ namespace WindowsFormsApp1
         int length = 0;
 
         bool isFull = true;
+
+        string camID = "01";
         public string path()
         {
             //String filename = "";
@@ -43,9 +45,9 @@ namespace WindowsFormsApp1
 
             openport_btn.Enabled = true;
             senddata_btn.Enabled = false;
-
-
-
+            offline_enable_btn.Enabled = false;
+            triger_io_btn.Enabled = false;
+            change_camid_btn.Enabled = false;
         }
 
         private void Form1_Close(object sender, EventArgs e)
@@ -63,14 +65,26 @@ namespace WindowsFormsApp1
                 serialPort1.BaudRate = Convert.ToInt32(baudrate_txt.Text);
                 serialPort1.Open();
                 openport_btn.Enabled = false;
-                //closeport_btn.Enabled = true;
+                offline_enable_btn.Enabled = true;
+                triger_io_btn.Enabled = true;
+                change_camid_btn.Enabled = true;
                 serialPort1.ReadTimeout = 1000;
-                //serialPort1.WriteTimeout = 600;
             }
 
             else
                 MessageBox.Show("Please check Port name and Baudrate");
 
+        }
+
+        private void choose_folder_btn_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = folderBrowserDialog1.ShowDialog();
+            if (dialogResult == DialogResult.OK)
+            {
+                choose_folder_path_txt.Text = folderBrowserDialog1.SelectedPath;
+                folderpath = folderBrowserDialog1.SelectedPath + "\\";
+                senddata_btn.Enabled = true;
+            }
         }
 
         private void senddata_btn_Click(object sender, EventArgs e)
@@ -83,12 +97,12 @@ namespace WindowsFormsApp1
                 try
                 {
                     String originalCommand = command_txt.Text.Replace(" ", ""); //Full command as String
-                    char[] ch = originalCommand.ToCharArray(); //Command split as char array
-
-                    char[] packageSizeArray = ch.Skip(10).Take(2).ToArray();
-                    var str = string.Join(" ", packageSizeArray).Replace(" ", "");
-
-                    string packageSizeHex = "0x" + str;
+                    String fullCommand = "5548" + camID + "3200" + originalCommand + "23";
+                        
+/*                    char[] packageSizeArray = ch.Skip(10).Take(2).ToArray();
+                    var str = string.Join(" ", packageSizeArray).Replace(" ", "");*/
+ 
+                    string packageSizeHex = "0x" + originalCommand;
                     int packageSizeNumber1 = Int32.Parse(packageSizeHex.Substring(2), NumberStyles.HexNumber);
                     length = packageSizeNumber1 * 256 + 8;
 
@@ -98,16 +112,17 @@ namespace WindowsFormsApp1
                     {
                         for (int i = 0; i < img_number ; i++)
                         {
-                            if (ch != null)
+                            if (originalCommand != null)
                             {
-                                serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+                                serialPort1.Write(HexString2Bytes(fullCommand), 0, HexString2Bytes(fullCommand).Length);
                                 Thread.Sleep(200);
                                 String cam_packages = ShowPackageAmount(sender, e).ToString().Replace(" ", "");
                                 senddata_btn.BeginInvoke(new MethodInvoker(() => { senddata_btn.Enabled = false; }));
                                 ReadAndWriteData(sender, e, cam_packages);
-                                serialPort1.BaseStream.Flush();
+                                
                                 serialPort1.DiscardOutBuffer();
                                 serialPort1.DiscardInBuffer();
+                                serialPort1.BaseStream.Flush();
                                 senddata_btn.BeginInvoke(new MethodInvoker(() => { senddata_btn.Enabled = true; }));
                             }
                             else
@@ -128,6 +143,110 @@ namespace WindowsFormsApp1
             else
                 errortxt.Text = ("No command provided !");
 
+        }
+
+        private void clear_btn_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(errortxt.Text))
+                errortxt.Text = null;
+        }
+
+        private void change_baudrate_btn_Click(object sender, EventArgs e)
+        {
+            int baudrateIndex = 0;
+            switch (baudrate_txt.Text)
+            {
+                case ("115200"):
+                    baudrateIndex = 1;
+                    break;
+                case ("230400"):
+                    baudrateIndex = 2;
+                    break;
+                case ("460800"):
+                    baudrateIndex = 3;
+                    break;
+                case ("921600"):
+                    baudrateIndex = 4;
+                    break;
+                default:
+                    baudrateIndex = 3;
+                    break;
+            }
+
+            String originalCommand = "5549"+camID+ "0" + baudrateIndex.ToString() + "23"; //Full command as String
+            char[] ch = originalCommand.ToCharArray(); //Command split as char array
+            serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+
+            if (serialPort1.IsOpen)
+                serialPort1.Close();
+            openport_btn.Enabled = true;
+            offline_enable_btn.Enabled = false;
+            triger_io_btn.Enabled = false;
+            change_camid_btn.Enabled = false;
+            senddata_btn.Enabled = false;
+
+
+        }
+
+        private void triger_io_btn_Click(object sender, EventArgs e)
+        {
+            int[] io = { 0, 0, 0, 0, 0 };
+            CheckBox[] cb = { io1_checkbox, io2_checkbox, io3_checkbox, io4_checkbox, io5_checkbox };
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (cb[i].Checked)
+                    io[i] = 1;
+                else
+                    io[i] = 0;
+            }
+
+            string str = string.Join("", io).Replace(" ", "");
+            string hex = Convert.ToInt32(str, 2).ToString("X");
+
+            String originalCommand = "";
+            if (hex.Length == 1)
+                originalCommand = "5554" + camID + "0" + hex + "23";
+            else
+                originalCommand = "5554" + camID + hex + "23";
+
+            serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+        }
+
+        private void offline_enable_btn_Click(object sender, EventArgs e)
+        {
+            String originalCommand = "5547" + camID + "23"; //Full command as String
+            serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+
+            int Length = serialPort1.BytesToRead;
+            byte[] buffer = new byte[Length];
+            serialPort1.Read(buffer, 0, buffer.Length);
+
+            if (buffer.Length > 0)
+            {
+                richTextBox1.Text = buffer[4].ToString();
+                if (buffer[3] == 1)
+                    true_checkbox.Checked = true;
+                else
+                    false_checkbox.Checked = true;
+                serialPort1.DiscardInBuffer();
+                serialPort1.DiscardOutBuffer();
+                serialPort1.BaseStream.Dispose();
+            }
+        }
+
+        private void change_camid_btn_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(new_id_txt.Text) && !string.IsNullOrEmpty(current_id_txt.Text))
+            {
+                String originalCommand = "5544" + current_id_txt.Text.ToString() + new_id_txt.Text.ToString() + "23";
+                camID = new_id_txt.Text.ToString();
+                serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
+
+               
+            }
+            else
+                MessageBox.Show("Please check the current ID and new ID!");
         }
 
         //--------------------------------------------------- Sel-defined functions -----------------------------------------------------//
@@ -243,7 +362,6 @@ namespace WindowsFormsApp1
                     byte[] bufferDataIn2 = new byte[length];
                     for (int i = 0; i < cam_packages_amount; i++)
                     {
-
                         ProcessingData(i, cam_packages_amount, bufferDataIn2);
                         ShowData(sender, e, readwritePath, length, bufferDataIn2);
                         
@@ -252,8 +370,6 @@ namespace WindowsFormsApp1
                             ProcessingData(i, cam_packages_amount, bufferDataIn2);
                             ShowData(sender, e, readwritePath, length, bufferDataIn2);
                         }
-
-
                     }
                     stopwatch.Stop();
 
@@ -271,7 +387,7 @@ namespace WindowsFormsApp1
                 double elapsedsec = stopwatch.Elapsed.TotalSeconds;
                 double elapsedsec1 = Truncate(elapsedsec, 4);
                 string elapsed = "Time elapsed for 1 image (seconds): " + elapsedsec1 + "\r\n";
-                errortxt.BeginInvoke(new MethodInvoker(() => { errortxt.Text += elapsed; }));
+                errortxt.BeginInvoke(new MethodInvoker(() => { errortxt.AppendText(elapsed); }));
             }
 
             catch (IOException er)
@@ -300,61 +416,11 @@ namespace WindowsFormsApp1
             return upPath;
         }
 
-        private void choose_folder_btn_Click(object sender, EventArgs e)
-        {
-            DialogResult dialogResult = folderBrowserDialog1.ShowDialog();
-            if (dialogResult == DialogResult.OK)
-            {
-                choose_folder_path_txt.Text = folderBrowserDialog1.SelectedPath;
-                folderpath = folderBrowserDialog1.SelectedPath + "\\";
-                senddata_btn.Enabled = true;
-            }
-        }
-
-        double Truncate(double number, int doublePlaces)
-        {
-            return (int)(number * (double)Math.Pow(10, doublePlaces)) / (double)Math.Pow(10, doublePlaces);
-        }
-
-        private void change_baudrate_btn_Click(object sender, EventArgs e)
-        {
-            int baudrateIndex = 0;
-            switch (baudrate_txt.Text)
-            {
-                case ("115200"):
-                    baudrateIndex = 1;
-                    break;
-                case ("230400"):
-                    baudrateIndex = 2;
-                    break;
-                case ("460800"):
-                    baudrateIndex = 3;
-                    break;
-                case ("921600"):
-                    baudrateIndex = 4;
-                    break;
-                default:
-                    baudrateIndex = 3;
-                    break;
-            }
-
-            String originalCommand = "5549010" + baudrateIndex.ToString() + "23"; //Full command as String
-            char[] ch = originalCommand.ToCharArray(); //Command split as char array
-            serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-
-            if (serialPort1.IsOpen)
-                serialPort1.Close();
-            openport_btn.Enabled = true;
-            senddata_btn.Enabled = false;
-
-
-        }
-
         //Append the package data to buffer array
         private void ProcessingData(int i, int cam_packages_amount, byte[] bufferDataIn2) 
         {
             string hex = String.Format("{0:X2}", i);
-            String originalCommand = "554501" + hex + "0023"; //Full command as String
+            String originalCommand = "5545" + camID + hex + "0023"; //Full command as String
             serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);      //Write command to serial port device
 
             progressBar1.BeginInvoke(new MethodInvoker(() =>
@@ -382,10 +448,11 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        double Truncate(double number, int doublePlaces)
         {
-
+            return (int)(number * (double)Math.Pow(10, doublePlaces)) / (double)Math.Pow(10, doublePlaces);
         }
+
     }
 }
 
