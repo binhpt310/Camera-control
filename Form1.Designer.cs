@@ -140,7 +140,7 @@
             this.command_txt.Name = "command_txt";
             this.command_txt.Size = new System.Drawing.Size(201, 46);
             this.command_txt.TabIndex = 13;
-            this.command_txt.Text = "20";
+            this.command_txt.Text = "25";
             // 
             // label6
             // 
@@ -226,7 +226,7 @@
             this.choose_folder_path_txt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.choose_folder_path_txt.Location = new System.Drawing.Point(16, 134);
             this.choose_folder_path_txt.Name = "choose_folder_path_txt";
-            this.choose_folder_path_txt.Size = new System.Drawing.Size(200, 76);
+            this.choose_folder_path_txt.Size = new System.Drawing.Size(388, 76);
             this.choose_folder_path_txt.TabIndex = 33;
             this.choose_folder_path_txt.Text = "";
             // 
@@ -237,7 +237,7 @@
             this.choose_folder_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.choose_folder_btn.Location = new System.Drawing.Point(223, 50);
             this.choose_folder_btn.Name = "choose_folder_btn";
-            this.choose_folder_btn.Size = new System.Drawing.Size(181, 162);
+            this.choose_folder_btn.Size = new System.Drawing.Size(181, 79);
             this.choose_folder_btn.TabIndex = 34;
             this.choose_folder_btn.Text = "CHOOSE FOLDER PATH";
             this.choose_folder_btn.UseVisualStyleBackColor = false;
@@ -307,6 +307,7 @@
             this.baudrate_txt.Name = "baudrate_txt";
             this.baudrate_txt.Size = new System.Drawing.Size(131, 36);
             this.baudrate_txt.TabIndex = 40;
+            this.baudrate_txt.Text = "460800";
             // 
             // img_num_txt
             // 
@@ -317,7 +318,7 @@
             this.img_num_txt.Name = "img_num_txt";
             this.img_num_txt.Size = new System.Drawing.Size(203, 41);
             this.img_num_txt.TabIndex = 43;
-            this.img_num_txt.Text = "5";
+            this.img_num_txt.Text = "10";
             // 
             // label7
             // 
@@ -336,7 +337,7 @@
             // 
             this.io1_checkbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.io1_checkbox.AutoSize = true;
-            this.io1_checkbox.Location = new System.Drawing.Point(33, 35);
+            this.io1_checkbox.Location = new System.Drawing.Point(33, 22);
             this.io1_checkbox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.io1_checkbox.Name = "io1_checkbox";
             this.io1_checkbox.Size = new System.Drawing.Size(67, 29);
@@ -348,7 +349,7 @@
             // 
             this.io2_checkbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.io2_checkbox.AutoSize = true;
-            this.io2_checkbox.Location = new System.Drawing.Point(105, 35);
+            this.io2_checkbox.Location = new System.Drawing.Point(105, 22);
             this.io2_checkbox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.io2_checkbox.Name = "io2_checkbox";
             this.io2_checkbox.Size = new System.Drawing.Size(67, 29);
@@ -360,7 +361,7 @@
             // 
             this.io3_checkbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.io3_checkbox.AutoSize = true;
-            this.io3_checkbox.Location = new System.Drawing.Point(176, 35);
+            this.io3_checkbox.Location = new System.Drawing.Point(176, 22);
             this.io3_checkbox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.io3_checkbox.Name = "io3_checkbox";
             this.io3_checkbox.Size = new System.Drawing.Size(67, 29);
@@ -372,7 +373,7 @@
             // 
             this.io4_checkbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.io4_checkbox.AutoSize = true;
-            this.io4_checkbox.Location = new System.Drawing.Point(248, 35);
+            this.io4_checkbox.Location = new System.Drawing.Point(248, 22);
             this.io4_checkbox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.io4_checkbox.Name = "io4_checkbox";
             this.io4_checkbox.Size = new System.Drawing.Size(67, 29);
@@ -384,7 +385,7 @@
             // 
             this.io5_checkbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.io5_checkbox.AutoSize = true;
-            this.io5_checkbox.Location = new System.Drawing.Point(319, 35);
+            this.io5_checkbox.Location = new System.Drawing.Point(319, 22);
             this.io5_checkbox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.io5_checkbox.Name = "io5_checkbox";
             this.io5_checkbox.Size = new System.Drawing.Size(67, 29);
@@ -397,7 +398,7 @@
             this.triger_io_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.triger_io_btn.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.triger_io_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.triger_io_btn.Location = new System.Drawing.Point(15, 75);
+            this.triger_io_btn.Location = new System.Drawing.Point(15, 62);
             this.triger_io_btn.Name = "triger_io_btn";
             this.triger_io_btn.Size = new System.Drawing.Size(389, 52);
             this.triger_io_btn.TabIndex = 49;
@@ -478,7 +479,7 @@
             // 
             this.true_checkbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.true_checkbox.AutoSize = true;
-            this.true_checkbox.Location = new System.Drawing.Point(10, 83);
+            this.true_checkbox.Location = new System.Drawing.Point(12, 79);
             this.true_checkbox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.true_checkbox.Name = "true_checkbox";
             this.true_checkbox.Size = new System.Drawing.Size(79, 29);
@@ -490,7 +491,7 @@
             // 
             this.false_checkbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.false_checkbox.AutoSize = true;
-            this.false_checkbox.Location = new System.Drawing.Point(10, 24);
+            this.false_checkbox.Location = new System.Drawing.Point(12, 20);
             this.false_checkbox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.false_checkbox.Name = "false_checkbox";
             this.false_checkbox.Size = new System.Drawing.Size(85, 29);
@@ -501,7 +502,7 @@
             // richTextBox1
             // 
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox1.Location = new System.Drawing.Point(104, 24);
+            this.richTextBox1.Location = new System.Drawing.Point(106, 20);
             this.richTextBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(141, 87);
@@ -513,7 +514,7 @@
             this.offline_enable_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.offline_enable_btn.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.offline_enable_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.offline_enable_btn.Location = new System.Drawing.Point(274, 24);
+            this.offline_enable_btn.Location = new System.Drawing.Point(276, 20);
             this.offline_enable_btn.Name = "offline_enable_btn";
             this.offline_enable_btn.Size = new System.Drawing.Size(124, 87);
             this.offline_enable_btn.TabIndex = 58;
@@ -556,9 +557,9 @@
             this.groupBox2.Controls.Add(this.false_checkbox);
             this.groupBox2.Controls.Add(this.true_checkbox);
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.groupBox2.Location = new System.Drawing.Point(736, 239);
+            this.groupBox2.Location = new System.Drawing.Point(736, 251);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(416, 144);
+            this.groupBox2.Size = new System.Drawing.Size(416, 121);
             this.groupBox2.TabIndex = 61;
             this.groupBox2.TabStop = false;
             // 
@@ -572,9 +573,9 @@
             this.groupBox3.Controls.Add(this.io2_checkbox);
             this.groupBox3.Controls.Add(this.io1_checkbox);
             this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.groupBox3.Location = new System.Drawing.Point(736, 401);
+            this.groupBox3.Location = new System.Drawing.Point(740, 394);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(416, 142);
+            this.groupBox3.Size = new System.Drawing.Size(416, 133);
             this.groupBox3.TabIndex = 62;
             this.groupBox3.TabStop = false;
             // 
