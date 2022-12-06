@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Text.DecoderReplacementFallback decoderReplacementFallback1 = new System.Text.DecoderReplacementFallback();
-            System.Text.EncoderReplacementFallback encoderReplacementFallback1 = new System.Text.EncoderReplacementFallback();
+            System.Text.DecoderReplacementFallback decoderReplacementFallback2 = new System.Text.DecoderReplacementFallback();
+            System.Text.EncoderReplacementFallback encoderReplacementFallback2 = new System.Text.EncoderReplacementFallback();
             this.change_baudrate_btn = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -135,12 +135,13 @@
             // 
             this.command_txt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.command_txt.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.command_txt.Location = new System.Drawing.Point(11, 133);
+            this.command_txt.Location = new System.Drawing.Point(233, 127);
             this.command_txt.Multiline = true;
             this.command_txt.Name = "command_txt";
-            this.command_txt.Size = new System.Drawing.Size(201, 46);
+            this.command_txt.Size = new System.Drawing.Size(165, 46);
             this.command_txt.TabIndex = 13;
             this.command_txt.Text = "25";
+            this.command_txt.TextChanged += new System.EventHandler(this.command_txt_TextChanged);
             // 
             // label6
             // 
@@ -151,9 +152,9 @@
             this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label6.Location = new System.Drawing.Point(10, 98);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(141, 25);
+            this.label6.Size = new System.Drawing.Size(214, 75);
             this.label6.TabIndex = 12;
-            this.label6.Text = "Package size";
+            this.label6.Text = "Package size = Input\r\n(hex) convert to dec \r\nthen * 256 and + 8";
             // 
             // errortxt
             // 
@@ -258,9 +259,9 @@
             this.senddata_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.senddata_btn.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.senddata_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.senddata_btn.Location = new System.Drawing.Point(233, 53);
+            this.senddata_btn.Location = new System.Drawing.Point(233, 30);
             this.senddata_btn.Name = "senddata_btn";
-            this.senddata_btn.Size = new System.Drawing.Size(171, 129);
+            this.senddata_btn.Size = new System.Drawing.Size(171, 66);
             this.senddata_btn.TabIndex = 14;
             this.senddata_btn.Text = "SEND DATA";
             this.senddata_btn.UseVisualStyleBackColor = false;
