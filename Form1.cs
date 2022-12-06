@@ -503,6 +503,11 @@ namespace WindowsFormsApp1
                 errortxt.BeginInvoke(new MethodInvoker(() => { errortxt.Text += "The read operation has reached timeout!\r\n"; }));
             }
         }
+
+        private void command_txt_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
