@@ -12,30 +12,26 @@ using System.ComponentModel;
 
 namespace WindowsFormsApp1
 {
-
     public partial class Form1 : Form
     {
-
         static String filename = "";
 
         String folderpath = "";
+
+        string camID = "01";
 
         int packageAmount;
 
         int length = 0;
 
-        bool isFull = true;
-
-        string camID = "01";
-
         int imgSize = 0;
 
         int lastPckgSize = 0;
 
+        bool isFull = true;
+
         public string path()
         {
-            //String filename = "";
-            //String folderpath = "C:/Users/7490/Documents/VisualStudioProjects/WindowsFormsApp1/textfile/";
             return folderpath + filename;
         }
 
@@ -54,6 +50,7 @@ namespace WindowsFormsApp1
             offline_enable_btn.Enabled = false;
             triger_io_btn.Enabled = false;
             change_camid_btn.Enabled = false;
+            change_baudrate_btn.Enabled = false;
         }
 
         private void Form1_Close(object sender, EventArgs e)
@@ -74,6 +71,7 @@ namespace WindowsFormsApp1
                 offline_enable_btn.Enabled = true;
                 triger_io_btn.Enabled = true;
                 change_camid_btn.Enabled = true;
+                change_baudrate_btn.Enabled = true;
                 serialPort1.ReadTimeout = 2000;
             }
 
@@ -105,9 +103,6 @@ namespace WindowsFormsApp1
                     String originalCommand = command_txt.Text.Replace(" ", ""); //Full command as String
                     String fullCommand = "5548" + camID + "3200" + originalCommand + "23";
                         
-/*                    char[] packageSizeArray = ch.Skip(10).Take(2).ToArray();
-                    var str = string.Join(" ", packageSizeArray).Replace(" ", "");*/
- 
                     string packageSizeHex = "0x" + originalCommand;
                     int packageSizeNumber1 = Int32.Parse(packageSizeHex.Substring(2), NumberStyles.HexNumber);
                     length = packageSizeNumber1 * 256 + 8;
@@ -160,13 +155,11 @@ namespace WindowsFormsApp1
                 errortxt.Text = ("No command provided !");
 
         }
-
         private void clear_btn_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(errortxt.Text))
                 errortxt.Text = null;
         }
-
         private void change_baudrate_btn_Click(object sender, EventArgs e)
         {
             int baudrateIndex = 0;
@@ -201,7 +194,6 @@ namespace WindowsFormsApp1
             change_camid_btn.Enabled = false;
             senddata_btn.Enabled = false;
         }
-
         private void triger_io_btn_Click(object sender, EventArgs e)
         {
             int[] io = { 0, 0, 0, 0, 0 };
@@ -230,7 +222,6 @@ namespace WindowsFormsApp1
             serialPort1.BaseStream.Flush();
 
         }
-
         private void offline_enable_btn_Click(object sender, EventArgs e)
         {
             String originalCommand = "5547" + camID + "23"; //Full command as String
@@ -252,16 +243,13 @@ namespace WindowsFormsApp1
                 serialPort1.BaseStream.Flush();
             }
         }
-
         private void change_camid_btn_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(new_id_txt.Text) && !string.IsNullOrEmpty(current_id_txt.Text))
             {
                 String originalCommand = "5544" + current_id_txt.Text.ToString() + new_id_txt.Text.ToString() + "23";
                 camID = new_id_txt.Text.ToString();
-                serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);
-
-               
+                serialPort1.Write(HexString2Bytes(originalCommand), 0, HexString2Bytes(originalCommand).Length);        
             }
             else
                 MessageBox.Show("Please check the current ID and new ID!");
